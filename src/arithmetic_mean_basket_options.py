@@ -8,12 +8,14 @@
 
 import math
 
+import numpy as np
 from scipy.stats import norm
 import numpy.random as random
 
 # Test value or other constant
 PATH_NUMBER = 100000
 RISK_FREE_RATE = 0.05
+MATURITY_TIME = 3
 
 # Remark that used in the following code
 PUT_OPTION = "Put"
@@ -32,77 +34,62 @@ class Option(object):
     Class to represent a option
     '''
 
-    def __init__(self, s0, strike_price, sigma, type):
+    def __init__(self, s0, strike_price, sigma, type, tau):
         self.sigma = float(sigma)
         self.type = type
         self.strike_price = float(strike_price)
         self.s0 = float(s0)
+        self.tau = float(tau)
 
-    def get_stock_price_array(self, delta_t, random_value):
+    def get_stock_price_array(self, random_value):
         stock_price_list = []
-        stock_price = self.s0
         for zi in random_value:
-            stock_price *= math.exp((RISK_FREE_RATE - 0.5 * self.sigma**2) * delta_t +
-                                    self.sigma * math.sqrt(delta_t) * zi)
+            stock_price = self.s0 * math.exp((RISK_FREE_RATE - 0.5 * self.sigma ** 2) * self.tau +
+                                             self.sigma * math.sqrt(self.tau) * zi)
             stock_price_list.append(stock_price)
 
-        return stock_price_list
+        return np.array(stock_price_list)
 
 
 class ArithmeticMeanBasketOptions(object):
-    def __init__(self, s10, s20, k, sigma1, sigma2, rho, type, tau):
-        random.seed(0)
-        self.option1 = Option(s10, k, sigma1, type)
-        self.option2 = Option(s20, k, sigma2, type)
-        self.sigma_B = math.sqrt(2 * sigma2 * sigma1 * rho + sigma1 * sigma1 + sigma2 * sigma2) / 2
-        self.avg_B = RISK_FREE_RATE - 0.5 * (sigma2 * sigma2 + sigma1 * sigma1) / 2 + 0.5 * self.sigma_B ** 2
+    def __init__(self, s10, s20, k, sigma1, sigma2, type, tau, risk_free_rate=RISK_FREE_RATE):
+        self.option1 = Option(s10, k, sigma1, type, tau)
+        self.option2 = Option(s20, k, sigma2, type, tau)
         self.B0 = float(s10 + s20) / 2
-        self._d1 = None
-        self._d2 = None
-        self.tau = tau
+        self.tau = float(tau)
+        self.strike_price = float(k)
+        self.type = type
+        self.risk_free_rate = risk_free_rate
 
-    @property
-    def d1(self):
-        ''' Function to calculate d1'''
-        if self._d1:
-            pass
-        elif self._d2:
-            self._d1 = self._d2 + self.sigma_B * math.sqrt(self.tau)
-        else:
-            self._d1 = (math.log(self.B0 / self.option1.strike_price)
-                        + (self.avg_B + 0.5 * self.sigma_B ** 2) * self.tau) \
-                       / (self.sigma_B * math.sqrt(self.tau))
-        return self._d1
-
-    @property
-    def d2(self):
-        ''' Function to calculate d2'''
-        if self._d2:
-            pass
-        elif self._d1:
-            self._d2 = self._d1 - self.sigma_B * math.sqrt(self.tau)
-        else:
-            self._d2 = (math.log(self.B0 / self.option1.strike_price)
-                        + (self.avg_B - 0.5 * self.sigma_B ** 2) * self.tau) \
-                       / (self.sigma_B * math.sqrt(self.tau))
-
-        return self._d2
-
-    def get_basket_price(self):
+    def get_basket_price(self, corr):
         ''' Return the basket price, this will be different as the option type difference '''
-        if self.option1.type == PUT_OPTION:
-            n1 = norm.cdf(-self.d1)
-            n2 = norm.cdf(-self.d2)
-            multiplier = -1
+        z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], corr, PATH_NUMBER)
+        s1 = self.option1.get_stock_price_array(z1)
+        s2 = self.option2.get_stock_price_array(z2)
+        b = (s1 + s2) * 0.5
+        if self.type == CALL_OPTION:
+            maturity_price = b - self.strike_price
         else:
-            n1 = norm.cdf(self.d1)
-            n2 = norm.cdf(self.d2)
-            multiplier = 1
+            maturity_price = self.strike_price - b
 
-        return multiplier * math.exp(-RISK_FREE_RATE * self.tau) * (self.B0 * math.exp(self.avg_B * self.tau) * n1
-                                                                    - self.option2.strike_price * n2)
+        for i in range(len(maturity_price)):
+            if maturity_price[i] < 0:
+                maturity_price[i] = 0
+
+        return maturity_price * math.exp(-RISK_FREE_RATE * self.tau)
+
+    def get_basket_price_with_control_variate(self, corr):
+        z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], corr, PATH_NUMBER)
 
 
 if __name__ == "__main__":
     random.seed(0)
-    print generate_two_correlated_random_variables([0, 0], [1, 1], 0.3, 10)
+    test = ArithmeticMeanBasketOptions(s10=100, s20=100, k=100, sigma1=0.3, sigma2=0.3,
+                                       type=PUT_OPTION, tau=MATURITY_TIME, risk_free_rate=RISK_FREE_RATE)
+    b = test.get_basket_price(0.5)
+    print b.mean(), b.std(), b.mean() - 1.96 * b.std() / math.sqrt(PATH_NUMBER),\
+        b.mean() + 1.96 * b.std() / math.sqrt(PATH_NUMBER)
+    # test = ArithmeticMeanBasketOptions(10, 10, 9, 0.1, 0.1, CALL_OPTION, 1)
+    # z = random.normal(size=PATH_NUMBER)
+
+    # print a
