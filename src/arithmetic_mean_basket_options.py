@@ -20,6 +20,13 @@ PUT_OPTION = "Put"
 CALL_OPTION = "Call"
 
 
+def generate_two_correlated_random_variables(means, stds, corr, number):
+    covs = [[stds[0] ** 2, stds[0] * stds[1] * corr],
+            [stds[0] * stds[1] * corr, stds[1] ** 2]]
+    m = random.multivariate_normal(means, covs, number).T
+    return m
+
+
 class Option(object):
     '''
     Class to represent a option
@@ -31,6 +38,16 @@ class Option(object):
         self.strike_price = float(strike_price)
         self.s0 = float(s0)
 
+    def get_stock_price_array(self, delta_t, random_value):
+        stock_price_list = []
+        stock_price = self.s0
+        for zi in random_value:
+            stock_price *= math.exp((RISK_FREE_RATE - 0.5 * self.sigma**2) * delta_t +
+                                    self.sigma * math.sqrt(delta_t) * zi)
+            stock_price_list.append(stock_price)
+
+        return stock_price_list
+
 
 class ArithmeticMeanBasketOptions(object):
     def __init__(self, s10, s20, k, sigma1, sigma2, rho, type, tau):
@@ -39,7 +56,7 @@ class ArithmeticMeanBasketOptions(object):
         self.option2 = Option(s20, k, sigma2, type)
         self.sigma_B = math.sqrt(2 * sigma2 * sigma1 * rho + sigma1 * sigma1 + sigma2 * sigma2) / 2
         self.avg_B = RISK_FREE_RATE - 0.5 * (sigma2 * sigma2 + sigma1 * sigma1) / 2 + 0.5 * self.sigma_B ** 2
-        self.B0 = math.sqrt(s10 * s20)
+        self.B0 = float(s10 + s20) / 2
         self._d1 = None
         self._d2 = None
         self.tau = tau
@@ -84,3 +101,8 @@ class ArithmeticMeanBasketOptions(object):
 
         return multiplier * math.exp(-RISK_FREE_RATE * self.tau) * (self.B0 * math.exp(self.avg_B * self.tau) * n1
                                                                     - self.option2.strike_price * n2)
+
+
+if __name__ == "__main__":
+    random.seed(0)
+    print generate_two_correlated_random_variables([0, 0], [1, 1], 0.3, 10)
