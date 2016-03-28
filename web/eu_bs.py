@@ -23,7 +23,7 @@ class index(object):
 
 class EuBs(object):
     def GET(self):
-        return render.eu_bs('name')
+        return render.eu_bs()
 
 if __name__ == "__main__":
     app.run()
