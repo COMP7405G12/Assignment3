@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>European call/put option</title>
+</head>
+<body>
+<div class="calculatorcontent margintop10 cal_SO">
+    <table width="715" border="0" class="cal_searchtable">
+        <tbody>
+        <tr>
+            <td width="21%">
+                <span class="floatleft">Stock Price</span>
+            </td>
+            <td width="28%">
+                <input type="text" name="underlying" id="underlying" style="width: 150px" autocomplete="off">
+            </td>
+            <td width="24%">
+                Volatility
+            </td>
+            <td>
+                <input type="text" name="vol" id="vol" style="width: 150px" autocomplete="off">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span class="floatleft">Strike Price</span>
+            </td>
+            <td>
+                <input type="text" name="strike" id="strike" style="width: 150px" autocomplete="off">
+            </td>
+            <td>
+                <span class="floatleft">Time to Maturity</span>
+            </td>
+            <td>
+                <input type="text" name="maturity" id="maturity" style="width: 150px" autocomplete="off">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Risk free rate
+            </td>
+            <td>
+                <input type="text" name="interestrate" id="rate" style="width: 130px" autocomplete="off">
+                %
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Option type
+            </td>
+            <td>
+                <input type="radio" name="style" id="Radio1" value="Put" autocomplete="off">
+                <span>Put Option</span>
+            </td>
+            <td colspan="2">
+                <input name="style" type="radio" id="Radio2" value="Call" checked="" autocomplete="off">
+                <span>Call Option</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
