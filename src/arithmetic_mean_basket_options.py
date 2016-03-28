@@ -72,17 +72,18 @@ class BasketOptions(object):
         z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], self.rho, path_number)
         s1 = self.option1.get_stock_price_array(z1)
         s2 = self.option2.get_stock_price_array(z2)
+
         b = (s1 + s2) * 0.5
         if self.type == CALL_OPTION:
             maturity_price = b - self.strike_price
         else:
             maturity_price = self.strike_price - b
 
-        for i in range(len(maturity_price)):
-            if maturity_price[i] < 0:
-                maturity_price[i] = 0
+        vitality = math.exp(-self.risk_free_rate * self.tau)
 
-        return maturity_price * math.exp(-self.risk_free_rate * self.tau), s1, s2
+        maturity_price = np.array([max(i, 0) * vitality for i in maturity_price])
+
+        return maturity_price, s1, s2
 
     def _get_geometric_price(self):
         std_bg = math.sqrt(
@@ -111,7 +112,6 @@ class BasketOptions(object):
         geo_mean_price = self._get_geometric_price()
         mean = arithmetic_price.mean()
         std = arithmetic_price.std()
-        print mean, mean - 1.96 * std / math.sqrt(path_number), mean + 1.96 * std / math.sqrt(path_number)
 
         # geometric price
         basket_geo_price = np.sqrt(s1 * s2)
@@ -121,12 +121,12 @@ class BasketOptions(object):
             maturity_price = self.strike_price - basket_geo_price
 
         # delete those negative prices
-        maturity_price = np.array([max(i, 0) for i in maturity_price])
-        geometric_price = math.exp(-self.risk_free_rate * self.tau) * maturity_price
+        validity = math.exp(-self.risk_free_rate * self.tau)
+        geometric_price = np.array([max(i, 0) * validity for i in maturity_price])
 
         # Control Variate
         cov_geo_arith = (geometric_price * arithmetic_price).mean() - geometric_price.mean() * arithmetic_price.mean()
-        theta = cov_geo_arith / geometric_price.std()
+        theta = cov_geo_arith / geometric_price.var()
 
         control_variate = arithmetic_price + theta * (geo_mean_price - geometric_price)
         control_mean = control_variate.mean()
