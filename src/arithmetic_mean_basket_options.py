@@ -108,21 +108,23 @@ class BasketOptions(object):
 
     def get_basket_price_with_control_variate(self, path_number):
         arithmetic_price, s1, s2 = self._get_basket_price(path_number)
+        geo_mean_price = self._get_geometric_price()
+        mean = arithmetic_price.mean()
+        std = arithmetic_price.std()
+        print mean, mean - 1.96 * std / math.sqrt(path_number), mean + 1.96 * std / math.sqrt(path_number)
 
         # geometric price
         basket_geo_price = np.sqrt(s1 * s2)
         if self.type == CALL_OPTION:
             maturity_price = basket_geo_price - self.strike_price
         else:
-            maturity_price = basket_geo_price - self.strike_price
+            maturity_price = self.strike_price - basket_geo_price
 
         # delete those negative prices
         maturity_price = np.array([max(i, 0) for i in maturity_price])
         geometric_price = math.exp(-self.risk_free_rate * self.tau) * maturity_price
 
         # Control Variate
-        xy = geometric_price * arithmetic_price
-        print geometric_price.mean() * arithmetic_price.mean()
         cov_geo_arith = (geometric_price * arithmetic_price).mean() - geometric_price.mean() * arithmetic_price.mean()
         theta = cov_geo_arith / geometric_price.std()
 
@@ -145,7 +147,7 @@ class BasketOptions(object):
 if __name__ == "__main__":
     test = BasketOptions(s10=100, s20=100, k=100, sigma1=0.3, sigma2=0.3, rho=0.5,
                          type=PUT_OPTION, tau=MATURITY_TIME, risk_free_rate=RISK_FREE_RATE)
-    print test.get_basket_price()
+    print test.get_basket_price(path_number=PATH_NUMBER)
     print test.get_basket_price(has_control=True)
     # test = ArithmeticMeanBasketOptions(10, 10, 9, 0.1, 0.1, CALL_OPTION, 1)
     # z = random.normal(size=PATH_NUMBER)
