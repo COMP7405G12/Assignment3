@@ -7,6 +7,7 @@
 # Date: 26/3/2016
 
 import math
+import string
 
 import numpy as np
 import numpy.random as random
@@ -110,13 +111,12 @@ class BasketOptions(object):
                 -self.strike_price * n2 + bg0 * math.exp(mean_bg * self.tau) * n1)
         return price
 
+    def get_geometric_price(self):
+        return self._get_geometric_price()
+
     def get_basket_price_with_control_variate(self, path_number):
         arithmetic_price, s1, s2 = self._get_basket_price(path_number)
         geo_mean_price = self._get_geometric_price()
-        arith_mean = arithmetic_price.mean()
-        arith_std = arithmetic_price.std()
-        value = [arith_mean, arith_mean - 1.96 * arith_std / math.sqrt(path_number),
-                 arith_mean + 1.96 * arith_std / math.sqrt(path_number)]
 
         # geometric price
         basket_geo_price = np.sqrt(s1 * s2)
@@ -136,9 +136,8 @@ class BasketOptions(object):
         control_variate = arithmetic_price + theta * (geo_mean_price - geometric_price)
         control_mean = control_variate.mean()
         control_std = control_variate.std()
-        value.extend([control_mean, control_mean - 1.96 * control_std / math.sqrt(path_number),
-                      control_mean + 1.96 * control_std / math.sqrt(path_number)])
-        return value
+        return [control_mean, control_mean - 1.96 * control_std / math.sqrt(path_number),
+                control_mean + 1.96 * control_std / math.sqrt(path_number)]
 
     def get_basket_price(self, path_number=PATH_NUMBER, has_control=False):
         if has_control:
@@ -165,7 +164,11 @@ class ArithmeticMeanBasketOptionsHTML(object):
             maturity = float(data['time'])
             rate = float(data['rate']) / 100
             corr = float(data['corr'])
-            num = int(data['num'])
+            num = data['num']
+            if num and num.isdigit:
+                num = int(num)
+            else:
+                num = None
             option_type = data['type']
             cv_type = data['cv_type']
         except ValueError, e:
@@ -173,13 +176,17 @@ class ArithmeticMeanBasketOptionsHTML(object):
         else:
             calculator = BasketOptions(s10=stock1, s20=stock2, k=strike, sigma2=vol2, sigma1=vol1, rho=corr,
                                        option_type=option_type, tau=maturity, risk_free_rate=rate)
-            if cv_type == 'GBO':
-                price_list = list(calculator.get_basket_price(num, True))
+            if num:
+                if cv_type == 'GBO':
+                    price_list = list(calculator.get_basket_price(num, True))
+                else:
+                    price_list = list(calculator.get_basket_price(num))
             else:
-                price_list = list(calculator.get_basket_price(num))
+                price_list = None
             return render.arithmetic_mean_basket_options(stock1=stock1, vol1=vol1, stock2=stock2, vol2=vol2,
                                                          strike=strike, corr=corr, rate=rate * 100, time=maturity,
-                                                         num=num, type=option_type, cv=cv_type, price=price_list)
+                                                         num=num, type=option_type, cv=cv_type, price=price_list,
+                                                         geo_price=calculator.get_geometric_price())
 
 
 if __name__ == "__main__":
