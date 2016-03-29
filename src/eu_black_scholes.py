@@ -72,7 +72,7 @@ class EuropeanOptionHtml(object):
             maturity_time = float(test['maturity'])
             risk_free_rate = float(test['interest_rate']) / 100
         except ValueError, e:
-            return render.eu_black_scholes("Invalid input, please check again")
+            return render.eu_black_scholes("Invalid input, please input again")
 
         if test['style'] == 'Call':
             option_price = calculate_call_black_scholes(stock_price, strike_price, maturity_time,
