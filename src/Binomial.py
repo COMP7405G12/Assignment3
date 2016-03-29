@@ -63,16 +63,16 @@ if __name__ == "__main__":
     test = Binomial(50,0.223144,52,0.05,2,2,"put")
     print test.execute()
     #test computing capacity
-    n = 30
-    total = np.power(2,n+1)-1
-    a = []
-    for i in range(0,total):
-        a.append(i)
-    max = a[0]
-    for i in range(0,len(a)):
-        if i > max:
-            max = i
-    print max
+    # n = 30
+    # total = np.power(2,n+1)-1
+    # a = []
+    # for i in range(0,total):
+    #     a.append(i)
+    # max = a[0]
+    # for i in range(0,len(a)):
+    #     if i > max:
+    #         max = i
+    # print max
 
 
 
