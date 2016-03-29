@@ -9,12 +9,13 @@
 import web
 
 from eu_black_scholes import EuropeanOptionHtml
+from arithmetic_mean_basket_options import ArithmeticMeanBasketOptionsHTML
 
 
 if __name__ == "__main__":
-    render = web.template.render('.')
     urls = (
-        '/eu_bs', 'EuropeanOptionHtml'
+        '/am_bo', ArithmeticMeanBasketOptionsHTML,
+        '/eu_bs', EuropeanOptionHtml
     )
     app = web.application(urls, globals())
     app.run()

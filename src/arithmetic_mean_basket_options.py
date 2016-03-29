@@ -8,9 +8,12 @@
 
 import math
 
+import web
 import numpy as np
 from scipy.stats import norm
 import numpy.random as random
+
+from __init__ import render
 
 # Test value or other constant
 PATH_NUMBER = 100000
@@ -110,8 +113,6 @@ class BasketOptions(object):
     def get_basket_price_with_control_variate(self, path_number):
         arithmetic_price, s1, s2 = self._get_basket_price(path_number)
         geo_mean_price = self._get_geometric_price()
-        mean = arithmetic_price.mean()
-        std = arithmetic_price.std()
 
         # geometric price
         basket_geo_price = np.sqrt(s1 * s2)
@@ -142,6 +143,14 @@ class BasketOptions(object):
             mean = maturity_price.mean()
             std = maturity_price.std()
             return mean, mean - 1.96 * std / math.sqrt(path_number), mean + 1.96 * std / math.sqrt(path_number)
+
+
+class ArithmeticMeanBasketOptionsHTML(object):
+    def GET(self):
+        return render.arithmetic_mean_basket_options()
+
+    def POST(self):
+        return render.arithmetic_mean_basket_options()
 
 
 if __name__ == "__main__":

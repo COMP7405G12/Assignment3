@@ -1,0 +1,125 @@
+$def with (stock1=0, vol1=0, stock2=0, vol2=0, strike=0, corr=0, rate=0, time=0, num=1, type='Call', cv=None, price=None, lower=None, higher=None)
+<html xmlns:withCV="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Arithmetic mean basket call/put options</title>
+</head>
+<body>
+<h1>Arithmetic mean basket call/put options calculator</h1>
+<form method="POST" action="ambo">
+    <table width="715" border="0">
+        <tbody>
+        <tr>
+            <td width="21%">
+                <span>Stock Price 1</span>
+            </td>
+            <td width="28%">
+                <input type="text" name="stock1" id="stock1" style="width: 150px" autocomplete="off" value="$stock1">
+            </td>
+            <td width="24%">
+                Volatility 1
+            </td>
+            <td>
+                <input type="text" name="vol1" id="vol1" style="width: 150px" autocomplete="off" value="$vol1">
+            </td>
+        </tr>
+        <tr>
+            <td width="21%">
+                <span>Stock Price 2</span>
+            </td>
+            <td width="28%">
+                <input type="text" name="stock2" id="stock2" style="width: 150px" autocomplete="off" value="$stock2">
+            </td>
+            <td width="24%">
+                Volatility 2
+            </td>
+            <td>
+                <input type="text" name="vol2" id="vol2" style="width: 150px" autocomplete="off" value="$vol2">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Strike Price</span>
+            </td>
+            <td>
+                <input type="text" name="strike" id="strike" style="width: 150px" autocomplete="off" value="$strike">
+            </td>
+            <td>
+                <span>Time to Maturity (In years)</span>
+            </td>
+            <td>
+                <input type="text" name="time" id="time" style="width: 150px" autocomplete="off" value="$time">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Risk free rate
+            </td>
+            <td>
+                <input type="text" name="rate" id="rate" style="width: 130px" autocomplete="off" value="$rate">
+                %
+            </td>
+            <td>
+                Correlation
+            </td>
+            <td>
+                <input type="text" name="corr" id="corr" style="width: 150px" autocomplete="off" value="$corr">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Path Number
+            </td>
+            <td>
+                <input type="text" name="num" id="num" style="width: 150px" autocomplete="off" value="$num">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Option type
+            </td>
+            <td>
+                <input type="radio" name="type" id="Option1" value="Put"
+                       $if type != "Call":
+                            checked=""
+                       autocomplete="off">
+                <span>Put Option</span>
+            </td>
+            <td colspan="2">
+                <input name="type" type="radio" id="Option2" value="Call"
+                       $if type == "Call":
+                            checked=""
+                       autocomplete="off">
+                <span>Call Option</span>
+            </td>
+        <tr>
+            <td>
+                Control Variate Method
+            </td>
+            <td>
+                <input type="radio" name="cv_type" id="NoCV" value="NoCV"
+                       $if cv != "GBO":
+                           checked=""
+                       autocomplete="off">
+                <span>No Control Variate</span>
+            </td>
+            <td colspan="2">
+                <input name="cv_type" type="radio" id="GBO" value="GBO"
+                       $if cv == "GBO":
+                           checked=""
+                       autocomplete="off">
+                <span>Geometric Basket Option</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <input name="Calculate" type="submit" value="Calculate">
+</form>
+$if isinstance(price, list) and len(price) == 3:
+    Geometric Basket option price is: $price[0], the the 95% confidence interval is [$price[1], $price[2]]
+$elif isinstance(price, list):
+    Geometric Basket option price is: $price[0], the the 95% confidence interval is [$price[1], $price[2]]
+    Arithmetic Basket option price is: $price[3], the the 95% confidence interval is [$price[4], $price[5]]
+$elif price:
+    <h1>$price</h1>
+</body>
+</html>
