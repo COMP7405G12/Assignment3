@@ -1,11 +1,11 @@
-$def with (stock1=0, vol1=0, stock2=0, vol2=0, strike=0, corr=0, rate=0, time=0, num=1, type='Call', cv=None, price=None, lower=None, higher=None)
-<html xmlns:withCV="http://www.w3.org/1999/xhtml">
+$def with (stock1=0, vol1=0, stock2=0, vol2=0, strike=0, corr=0, rate=0, time=0, num=1, type='Call', cv=None, price=None)
+<html>
 <head>
     <title>Arithmetic mean basket call/put options</title>
 </head>
 <body>
 <h1>Arithmetic mean basket call/put options calculator</h1>
-<form method="POST" action="ambo">
+<form method="POST" action="am_bo">
     <table width="715" border="0">
         <tbody>
         <tr>
@@ -117,7 +117,7 @@ $def with (stock1=0, vol1=0, stock2=0, vol2=0, strike=0, corr=0, rate=0, time=0,
 $if isinstance(price, list) and len(price) == 3:
     Geometric Basket option price is: $price[0], the the 95% confidence interval is [$price[1], $price[2]]
 $elif isinstance(price, list):
-    Geometric Basket option price is: $price[0], the the 95% confidence interval is [$price[1], $price[2]]
+Geometric Basket option price is: $price[0], the the 95% confidence interval is [$price[1], $price[2]]<br/>
     Arithmetic Basket option price is: $price[3], the the 95% confidence interval is [$price[4], $price[5]]
 $elif price:
     <h1>$price</h1>
