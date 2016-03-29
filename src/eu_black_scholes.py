@@ -8,6 +8,7 @@
 
 import math
 
+import web
 from scipy.stats import norm
 
 
@@ -56,3 +57,17 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     p = e * math.exp(-r * tau) * n2 - s * n1
     return p
 
+render = web.template.render('.')
+
+class EuropeanOptionHtml(object):
+    def GET(self):
+        return render.eu_black_scholes(None)
+
+    def POST(self):
+        data = web.data()
+        test = web.input()
+        print type(data)
+        print data
+        print type(test)
+        print test['style']
+        return render.eu_black_scholes("hasahfsadfhas")
