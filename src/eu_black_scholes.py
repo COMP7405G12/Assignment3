@@ -57,17 +57,30 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     p = e * math.exp(-r * tau) * n2 - s * n1
     return p
 
+
 render = web.template.render('.')
+
 
 class EuropeanOptionHtml(object):
     def GET(self):
         return render.eu_black_scholes(None)
 
     def POST(self):
-        data = web.data()
         test = web.input()
-        print type(data)
-        print data
-        print type(test)
-        print test['style']
-        return render.eu_black_scholes("hasahfsadfhas")
+        try:
+            stock_price = float(test['underlying'])
+            volatility = float(test['vol'])
+            strike_price = float(test['strike'])
+            maturity_time = float(test['maturity'])
+            risk_free_rate = float(test['interest_rate']) / 100
+        except ValueError, e:
+            return render.eu_black_scholes("Invalid input, please check again")
+
+        if test['style'] == 'Call':
+            option_price = calculate_call_black_scholes(stock_price, strike_price, maturity_time,
+                                                        volatility, risk_free_rate)
+        else:
+            option_price = calculate_put_black_scholes(stock_price, strike_price, maturity_time,
+                                                       volatility, risk_free_rate)
+        return render.eu_black_scholes(option_price, stock=strike_price, vol=volatility, style=test['style'],
+                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100)
