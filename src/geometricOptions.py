@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.stats import norm
-
 def geometricAsian(S,v,r,T,K,n,type):
     S = float(S)
     T = float(T)
