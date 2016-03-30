@@ -177,7 +177,6 @@ class ArithmeticMeanBasketOptionsHTML(object):
                 price_list.extend(calculator.get_basket_price(num, True))
 
 
-
 if __name__ == "__main__":
     test = BasketOptions(s10=100, s20=100, k=100, sigma1=0.3, sigma2=0.3, rho=0.5,
                          option_type=PUT_OPTION, tau=MATURITY_TIME, risk_free_rate=RISK_FREE_RATE)
