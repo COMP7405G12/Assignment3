@@ -6,3 +6,7 @@
 # Author: Mark Wang
 # Date: 28/3/2016
 # init file
+
+import web
+
+render = web.template.render('.')

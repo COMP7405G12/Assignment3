@@ -11,6 +11,8 @@ import math
 import web
 from scipy.stats import norm
 
+from __init__ import render
+
 
 def calculate_d1(s, e, tau, sigma, r):
     d1 = (math.log(s / float(e)) + (r + 0.5 * sigma * sigma) * tau) / (sigma * math.sqrt(tau))
@@ -57,13 +59,9 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     p = e * math.exp(-r * tau) * n2 - s * n1
     return p
 
-
-render = web.template.render('.')
-
-
 class EuropeanOptionHtml(object):
     def GET(self):
-        return render.eu_black_scholes(None)
+        return render.eu_black_scholes()
 
     def POST(self):
         test = web.input()
@@ -74,7 +72,7 @@ class EuropeanOptionHtml(object):
             maturity_time = float(test['maturity'])
             risk_free_rate = float(test['interest_rate']) / 100
         except ValueError, e:
-            return render.eu_black_scholes("Invalid input, please check again")
+            return render.eu_black_scholes("Invalid input, please input again")
 
         if test['style'] == 'Call':
             option_price = calculate_call_black_scholes(stock_price, strike_price, maturity_time,
