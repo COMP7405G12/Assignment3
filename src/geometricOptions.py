@@ -1,5 +1,7 @@
 import numpy as np
 from scipy.stats import norm
+import web
+from __init__ import render
 def geometricAsian(S,v,r,T,K,n,type):
     S = float(S)
     T = float(T)
@@ -34,6 +36,32 @@ def geometricBasket(S,v,r,T,K,p,type,n):
     elif type == "put":
         return np.exp(-1*r*T)*(K*norm.cdf(-1*d2_b) - B*np.exp(delt_b*T)*norm.cdf(-1*d1_b))
     return ""
+
+class GeometricOptionHtml(object):
+    def GET(self):
+        return render.eu_geometricOptions()
+
+    def POST(self):
+        test = web.input()
+        print "test"
+        try:
+            stock_price = float(test['underlying'])
+            volatility = float(test['vol'])
+            strike_price = float(test['strike'])
+            maturity_time = float(test['maturity'])
+            risk_free_rate = float(test['interest_rate']) / 100
+            observation_times = float(test['observation_times'])
+        except ValueError, e:
+            return render.eu_geometricOptions("Invalid input, please input again")
+
+        if test['style'] == 'Call':
+            option_price = geometricAsian(stock_price,volatility, risk_free_rate,maturity_time,strike_price,observation_times,
+                                          "call")
+        else:
+            option_price = geometricAsian(stock_price,volatility, risk_free_rate,maturity_time,strike_price,observation_times,
+                                          "put")
+        return render.eu_geometricOptions(option_price, stock=strike_price, vol=volatility, style=test['style'],
+                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100, times=observation_times)
 
 if __name__ == "__main__":
     print geometricAsian(100,0.3,0.05,3,100,50,"put")
