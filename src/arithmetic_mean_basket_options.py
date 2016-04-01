@@ -179,15 +179,22 @@ class ArithmeticMeanBasketOptionsHTML(object):
 
     def POST(self):
         data = web.input()
+        stock_price = '100, 100'
+        volatility = '0.3, 0.3'
+        strike = 100
+        maturity = 3
+        rate = 5
+        corr = '0.5'
+        num = None
+        option_type = PUT_OPTION
+        cv_type = 'GBO'
         try:
-            stock1 = float(data['stock1'])
-            stock2 = float(data['stock2'])
-            vol1 = float(data['vol1'])
-            vol2 = float(data['vol2'])
+            stock_price = data['stock']
+            volatility = data['vol']
             strike = float(data['strike'])
             maturity = float(data['time'])
             rate = float(data['rate']) / 100
-            corr = float(data['corr'])
+            corr = data['corr']
             num = data['num']
             if num and num.isdigit:
                 num = int(num)
@@ -196,10 +203,43 @@ class ArithmeticMeanBasketOptionsHTML(object):
             option_type = data['type']
             cv_type = data['cv_type']
         except ValueError, e:
-            return render.arithmetic_mean_basket_options(price="Invalid input, please input again")
+            return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         time=maturity, num=num, type=option_type, cv=cv_type,
+                                                         price="Invalid input, please input again")
         else:
-            calculator = BasketOptions(stock_price=[stock1, stock2], k=strike, sigma=[vol1, vol2],
-                                       rho=[corr, 0.2, 0.1],
+            stock_list = stock_price.split(',')
+            volatility_list = volatility.split(',')
+            corr_list = corr.split(',')
+            n = len(stock_list)
+            if n <= 1:
+                return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                             strike=strike, corr=corr, rate=rate * 100,
+                                                             time=maturity, num=num, type=option_type, cv=cv_type,
+                                                             price="Not enough stock price input")
+
+            elif n > len(volatility_list):
+                return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                             strike=strike, corr=corr, rate=rate * 100,
+                                                             time=maturity, num=num, type=option_type, cv=cv_type,
+                                                             price="Stock price number is greater than volatility number")
+            elif len(corr_list) < n * (n - 1) / 2:
+                return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                             strike=strike, corr=corr, rate=rate * 100,
+                                                             time=maturity, num=num, type=option_type, cv=cv_type,
+                                                             price="Not enough correlation numbers")
+            else:
+                try:
+                    stock_list = [float(i.strip()) for i in stock_list]
+                    volatility_list = [float(i.strip()) for i in volatility_list]
+                    corr_list = [float(i.strip()) for i in corr_list]
+                except ValueError, e:
+                    return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                                 strike=strike, corr=corr, rate=rate * 100,
+                                                                 time=maturity, num=num, type=option_type, cv=cv_type,
+                                                                 price="Wrong value input")
+
+            calculator = BasketOptions(stock_price=stock_list, k=strike, sigma=volatility_list, rho=corr_list,
                                        option_type=option_type, tau=maturity, risk_free_rate=rate)
             if num:
                 if cv_type == 'GBO':
@@ -208,8 +248,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
                     price_list = list(calculator.get_basket_price(num))
             else:
                 price_list = None
-            return render.arithmetic_mean_basket_options(stock1=stock1, vol1=vol1, stock2=stock2, vol2=vol2,
-                                                         strike=strike, corr=corr, rate=rate * 100, time=maturity,
-                                                         num=num, type=option_type, cv=cv_type, price=price_list,
-                                                         geo_price=calculator.get_geometric_price())
-
+            return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         time=maturity, num=num, type=option_type, cv=cv_type,
+                                                         price=price_list, geo_price=calculator.get_geometric_price())

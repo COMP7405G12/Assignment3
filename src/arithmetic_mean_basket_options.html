@@ -1,4 +1,4 @@
-$def with (stock1=0, vol1=0, stock2=0, vol2=0, strike=0, corr=0, rate=0, time=0, num=None, type='Call', cv=None, price=None, geo_price=None)
+$def with (stock='100, 100', vol='0.3, 0.3', strike=0, corr='0.5', rate=0, time=0, num=None, type='Call', cv=None, price=None, geo_price=None)
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Arithmetic mean basket call/put options</title>
@@ -7,35 +7,28 @@ $def with (stock1=0, vol1=0, stock2=0, vol2=0, strike=0, corr=0, rate=0, time=0,
 <a href="/">back</a>
 <h1>Arithmetic / Geometric mean basket call/put options calculator</h1>
 <em>If do not input the path number, this will become geometric basket option calculator</em><br>
+Please input different stock price and volatility in the blank space, use comma to split different values<br>
+Rules for correlation, suppose there are n options, the first correlation is between option 1 and 2, the second is
+option 1 and 3 ... <br>
+Example:<br>
+Stock price = 100, 100, 100<br>
+Volatility = 0.3, 0.3, 0.3<br>
+corr = 0.5, 0.2, 0.4<br>
 <form method="POST" action="am_bo">
     <table width="715" border="0">
         <tbody>
         <tr>
             <td width="21%">
-                <span>Stock Price 1</span>
+                <span>Stock Price</span>
             </td>
             <td width="28%">
-                <input type="text" name="stock1" id="stock1" style="width: 150px" autocomplete="off" value="$stock1">
+                <input type="text" name="stock" id="stock" style="width: 150px" autocomplete="off" value="$stock">
             </td>
             <td width="24%">
-                Volatility 1
+                Volatility
             </td>
             <td>
-                <input type="text" name="vol1" id="vol1" style="width: 150px" autocomplete="off" value="$vol1">
-            </td>
-        </tr>
-        <tr>
-            <td width="21%">
-                <span>Stock Price 2</span>
-            </td>
-            <td width="28%">
-                <input type="text" name="stock2" id="stock2" style="width: 150px" autocomplete="off" value="$stock2">
-            </td>
-            <td width="24%">
-                Volatility 2
-            </td>
-            <td>
-                <input type="text" name="vol2" id="vol2" style="width: 150px" autocomplete="off" value="$vol2">
+                <input type="text" name="vol" id="vol" style="width: 150px" autocomplete="off" value="$vol">
             </td>
         </tr>
         <tr>
