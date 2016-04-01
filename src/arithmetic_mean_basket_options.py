@@ -193,7 +193,3 @@ if __name__ == "__main__":
                          option_type=PUT_OPTION, tau=MATURITY_TIME, risk_free_rate=RISK_FREE_RATE)
     print test.get_basket_price(path_number=PATH_NUMBER)
     print test.get_basket_price(has_control=True)
-    # test = ArithmeticMeanBasketOptions(10, 10, 9, 0.1, 0.1, CALL_OPTION, 1)
-    # z = random.normal(size=PATH_NUMBER)
-
-    # print a
