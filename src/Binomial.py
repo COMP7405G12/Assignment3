@@ -1,5 +1,7 @@
 import numpy as np
 import eu_black_scholes as bs
+import web
+from __init__ import render
 class BinaryTreeNode:
     def __init__(self,data,left,right):
         self.left = left
@@ -7,7 +9,7 @@ class BinaryTreeNode:
         self.right = right
 
 class Binomial:
-    def __init__(self,S,v,K,r,T,n,type):
+    def __init__(self,S,v,K,r,T,type,n=30):
         self.T = float(T)
         self.S = float(S)
         self.K = float(K)
@@ -61,6 +63,25 @@ class Binomial:
                              np.exp(-1*self.r*self.delt_t)*(V[1:self.len+1-i]*self.p + (1 - self.p)*V[0:self.len-i])],axis=0)
         return V[0]
 
+class BinomialTreeHtml(object):
+    def GET(self):
+        return render.eu_Binomial()
+
+    def POST(self):
+        test = web.input()
+        try:
+            stock_price = float(test['underlying'])
+            volatility = float(test['vol'])
+            strike_price = float(test['strike'])
+            maturity_time = float(test['maturity'])
+            risk_free_rate = float(test['interest_rate']) / 100
+        except ValueError, e:
+            return render.eu_Binomial("Invalid input, please input again")
+
+        bt = Binomial(stock_price,volatility,strike_price,risk_free_rate,maturity_time,test['style'])
+        option_price = bt.execute()
+        return render.eu_black_scholes(option_price, stock=strike_price, vol=volatility, style=test['style'],
+                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100)
 
 if __name__ == "__main__":
     #test = Binomial(50,0.3,50,0.05,0.25,3,"call")
