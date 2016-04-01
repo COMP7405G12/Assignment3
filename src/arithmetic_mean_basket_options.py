@@ -8,10 +8,10 @@
 
 import math
 
-import web
 import numpy as np
-from scipy.stats import norm
 import numpy.random as random
+import web
+from scipy.stats import norm
 
 from __init__ import render
 
@@ -56,15 +56,25 @@ class Option(object):
 
 
 class BasketOptions(object):
-    def __init__(self, s10, s20, k, sigma1, sigma2, option_type, tau, rho, risk_free_rate=RISK_FREE_RATE):
-        self.option1 = Option(s10, k, sigma1, option_type, tau, risk_free_rate)
-        self.option2 = Option(s20, k, sigma2, option_type, tau, risk_free_rate)
-        self.B0 = float(s10 + s20) / 2
+    def __init__(self, stock_price, k, sigma, option_type, tau, rho, risk_free_rate=RISK_FREE_RATE):
+        self.option = []
+        self.option_num = len(stock_price)
+        for i in range(self.option_num):
+            self.option.append(Option(stock_price[i], k, sigma[i], option_type, tau, risk_free_rate))
         self.tau = float(tau)
         self.strike_price = float(k)
         self.type = option_type
         self.risk_free_rate = risk_free_rate
-        self.rho = rho
+        self.rho = []
+        for i in range(self.option_num):
+            self.rho.append([])
+            for j in range(self.option_num):
+                if j == i:
+                    self.rho[i].append(1)
+                elif j > i:
+                    self.rho[i].append(rho.pop(0))
+                else:
+                    self.rho[i].append(self.rho[j][i])
 
     def _get_basket_price(self, path_number):
         ''' Return the basket price, this will be different as the option type difference '''
@@ -72,11 +82,17 @@ class BasketOptions(object):
         # fix all the variable
         random.seed(0)
 
-        z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], self.rho, path_number)
-        s1 = self.option1.get_stock_price_array(z1)
-        s2 = self.option2.get_stock_price_array(z2)
+        # z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], self.rho[0][1], path_number)
+        # s1 = self.option[0].get_stock_price_array(z1)
+        # s2 = self.option[1].get_stock_price_array(z2)
+        z = random.multivariate_normal([0] * self.option_num, self.rho, path_number).T
+        b = self.option[0].get_stock_price_array(z[0])
+        s = [self.option[0].get_stock_price_array(z[0])]
+        for i in range(1, self.option_num):
+            s.append(self.option[i].get_stock_price_array(z[i]))
+            b += s[-1]
 
-        b = (s1 + s2) * 0.5
+        b = b / self.option_num
         if self.type == CALL_OPTION:
             maturity_price = b - self.strike_price
         else:
@@ -86,15 +102,21 @@ class BasketOptions(object):
 
         maturity_price = np.array([max(i, 0) * vitality for i in maturity_price])
 
-        return maturity_price, s1, s2
+        return maturity_price, s
 
     def _get_geometric_price(self):
-        std_bg = math.sqrt(
-            self.option1.sigma ** 2 + self.option2.sigma ** 2 + 2 * self.option2.sigma * self.option1.sigma * self.rho
-        ) / 2
-        mean_bg = self.risk_free_rate - 0.5 * (
-            self.option1.sigma ** 2 + self.option2.sigma ** 2) / 2 + 0.5 * std_bg ** 2
-        bg0 = math.sqrt(self.option2.s0 * self.option1.s0)
+        std_bg = 0.0
+        for i in range(self.option_num):
+            for j in range(self.option_num):
+                std_bg += self.option[i].sigma * self.option[j].sigma * self.rho[i][j]
+        std_bg = math.sqrt(std_bg) / self.option_num
+        mean_bg = self.risk_free_rate + 0.5 * std_bg ** 2
+        bg0 = 1
+        for i in range(self.option_num):
+            mean_bg -= 0.5 * self.option[i].sigma ** 2 / self.option_num
+            bg0 *= self.option[i].s0
+
+        bg0 = bg0 ** (1 / float(self.option_num))
         d1 = (math.log(bg0 / self.strike_price) + (mean_bg + 0.5 * std_bg ** 2) * self.tau) / (
             std_bg * math.sqrt(self.tau))
         d2 = d1 - std_bg * math.sqrt(self.tau)
@@ -114,11 +136,14 @@ class BasketOptions(object):
         return self._get_geometric_price()
 
     def get_basket_price_with_control_variate(self, path_number):
-        arithmetic_price, s1, s2 = self._get_basket_price(path_number)
+        arithmetic_price, s = self._get_basket_price(path_number)
         geo_mean_price = self._get_geometric_price()
 
         # geometric price
-        basket_geo_price = np.sqrt(s1 * s2)
+        basket_geo_price = s[0]
+        for i in range(1, self.option_num):
+            basket_geo_price *= s[i]
+        basket_geo_price = np.power(basket_geo_price, 1 / float(self.option_num))
         if self.type == CALL_OPTION:
             maturity_price = basket_geo_price - self.strike_price
         else:
@@ -173,7 +198,8 @@ class ArithmeticMeanBasketOptionsHTML(object):
         except ValueError, e:
             return render.arithmetic_mean_basket_options(price="Invalid input, please input again")
         else:
-            calculator = BasketOptions(s10=stock1, s20=stock2, k=strike, sigma2=vol2, sigma1=vol1, rho=corr,
+            calculator = BasketOptions(stock_price=[stock1, stock2], k=strike, sigma=[vol1, vol2],
+                                       rho=[corr, 0.2, 0.1],
                                        option_type=option_type, tau=maturity, risk_free_rate=rate)
             if num:
                 if cv_type == 'GBO':
@@ -187,9 +213,3 @@ class ArithmeticMeanBasketOptionsHTML(object):
                                                          num=num, type=option_type, cv=cv_type, price=price_list,
                                                          geo_price=calculator.get_geometric_price())
 
-
-if __name__ == "__main__":
-    test = BasketOptions(s10=100, s20=100, k=100, sigma1=0.3, sigma2=0.3, rho=0.5,
-                         option_type=PUT_OPTION, tau=MATURITY_TIME, risk_free_rate=RISK_FREE_RATE)
-    print test.get_basket_price(path_number=PATH_NUMBER)
-    print test.get_basket_price(has_control=True)
