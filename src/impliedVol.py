@@ -61,7 +61,7 @@ class impliedVol:
         call = float(item3 * norm.cdf(d1) - item4 * norm.cdf(d2))
         put = float(item4 * norm.cdf(-d2) - item3 * norm.cdf(-d1))
 
-        cvega = float(self.S * math.sqrt(self.T - self.t) * norm.pdf(d1))
+        cvega = self.S * math.sqrt(self.T - self.t) * math.exp(-0.5 * d1 ** 2) / math.sqrt(2 * math.pi)
         pvega = cvega
 
         return call, cvega, put, pvega
