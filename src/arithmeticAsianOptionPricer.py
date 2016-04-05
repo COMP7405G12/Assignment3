@@ -1,8 +1,11 @@
 # Implement of Monte Carlo method with control variate technique for arithmetic Asian call/put options
 import math
+
 import numpy
-from scipy.stats import norm
 import web
+from numpy import random
+from scipy.stats import norm
+
 from __init__ import render
 
 
@@ -26,16 +29,12 @@ class arithmeticOption:
         self.method = method
 
     def arithmeticOptPricer(self):
-        # calculate geo Asian exact mean
-        sigsqT, muT, d1, d2, N1, N2, geo, drift = float(), float(), float(), float(), float(), float(), float(), float()
-        arithPayoff = list()
-        geoPayoff = list()
-
+        # calculate geo Asian exact means
         sigsqT = self.sigma * self.sigma * self.T * (self.N + 1.0) * (2.0 * self.N + 1) / (6.0 * self.N * self.N)
         muT = 0.5 * sigsqT + (self.r - 0.5 * self.sigma * self.sigma) * self.T * (self.N + 1.0) / (2.0 * self.N)
 
-        d1 = float((math.log(float(self.S) / self.E) + (muT + 0.5 * sigsqT)) / math.sqrt(sigsqT))
-        d2 = float(d1) - math.sqrt(sigsqT)
+        d1 = (math.log(float(self.S) / self.E) + (muT + 0.5 * sigsqT)) / math.sqrt(sigsqT)
+        d2 = d1 - math.sqrt(sigsqT)
 
         N1 = norm.cdf(d1)
         N2 = norm.cdf(d2)
@@ -45,16 +44,16 @@ class arithmeticOption:
             geo = max(math.exp(-self.r * self.T) * (self.E * (1 - N2) - self.S * math.exp(muT) * (1 - N1)), 0)
 
         drift = math.exp((self.r - 0.5 * self.sigma * self.sigma) * self.Dt)
-        random_value = norm.rvs(loc=0, scale=1, size=(self.M, self.N))
+
+        random.seed(0)
+        random_value = random.normal(size=(self.N, self.M))
         Spath = numpy.exp(random_value * self.sigma * math.sqrt(self.Dt)) * drift
-        Spath = Spath.T
         Spath[0] *= self.S
         for i in range(1, self.N):
             Spath[i] *= Spath[i - 1]
 
-        Spath = Spath.T
-        arithMean = Spath.mean(1)
-        geoMean = numpy.exp(numpy.log(Spath).mean(1))
+        arithMean = Spath.mean(0)
+        geoMean = numpy.exp(numpy.log(Spath).mean(0))
 
         if self.type == 'Put':
             arithMean = self.E - arithMean
