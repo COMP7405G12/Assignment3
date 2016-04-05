@@ -80,5 +80,5 @@ class EuropeanOptionHtml(object):
         else:
             option_price = calculate_put_black_scholes(stock_price, strike_price, maturity_time,
                                                        volatility, risk_free_rate)
-        return render.eu_black_scholes(option_price, stock=strike_price, vol=volatility, style=test['style'],
+        return render.eu_black_scholes(option_price, stock=stock_price, vol=volatility, style=test['style'],
                                        strike=strike_price, T=maturity_time, r=risk_free_rate * 100)
