@@ -16,6 +16,7 @@ class Binomial:
         self.type = type
         self.r = r
         self.v = v
+        print n
         self.delt_t = self.T/n
         self.u = np.exp(self.v*np.sqrt(self.delt_t))
         self.d = 1/self.u
@@ -75,17 +76,23 @@ class BinomialTreeHtml(object):
             strike_price = float(test['strike'])
             maturity_time = float(test['maturity'])
             risk_free_rate = float(test['interest_rate']) / 100
+            steps = int(test['steps'])
+            print steps
         except ValueError, e:
             return render.eu_Binomial("Invalid input, please input again")
+        try:
+            bt = Binomial(stock_price,volatility,strike_price,risk_free_rate,maturity_time,test['style'],n=steps)
+            option_price = bt.execute()
+            return render.eu_Binomial(option_price, stock=strike_price, vol=volatility, style=test['style'],
+                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100, s=steps)
+        except Exception, e:
+            return render.eu_Binomial("Illeage input, calculate error:" + e.message)
 
-        bt = Binomial(stock_price,volatility,strike_price,risk_free_rate,maturity_time,test['style'])
-        option_price = bt.execute()
-        return render.eu_black_scholes(option_price, stock=strike_price, vol=volatility, style=test['style'],
-                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100)
+
 
 if __name__ == "__main__":
     #test = Binomial(50,0.3,50,0.05,0.25,3,"call")
-    test = Binomial(50,0.223144,52,0.05,2,30,"put")
+    test = Binomial(50,0.223144,52,0.05,2,"put",30)
     print test.AmericanOption()
     print test.EuropeanOption()
     print test.execute()

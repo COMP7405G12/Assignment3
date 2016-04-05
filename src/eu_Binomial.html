@@ -1,4 +1,4 @@
-$def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0)
+$def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, s=30)
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -45,12 +45,19 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0)
             </tr>
             <tr>
                 <td>
-                    Risk free rate
+                    Risk Free Rate
                 </td>
                 <td>
                     <input type="text" name="interest_rate" id="rate" style="width: 130px" autocomplete="off"
                            value="$r">
                     %
+                </td>
+                 <td>
+                    Number of Steps
+                </td>
+                <td>
+                    <input type="text" name="steps" id="steps" style="width: 130px" autocomplete="off"
+                           value="$s">
                 </td>
             </tr>
             <tr>
