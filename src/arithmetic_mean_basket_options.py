@@ -183,7 +183,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
         volatility = '0.3, 0.3'
         strike = 100
         maturity = 3
-        rate = 5
+        rate = 0.05
         corr = '0.5'
         num = None
         option_type = PUT_OPTION

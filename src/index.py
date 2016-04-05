@@ -13,6 +13,8 @@ from eu_black_scholes import EuropeanOptionHtml
 from arithmetic_mean_basket_options import ArithmeticMeanBasketOptionsHTML
 from geometricOptions import GeometricOptionHtml
 from Binomial import BinomialTreeHtml
+from impliedVol import ImpliedVolHtml
+from arithmeticAsianOptionPricer import ArithmeticAsianOptionPricerHtml
 
 
 class Index(object):
@@ -26,6 +28,8 @@ if __name__ == "__main__":
         '/eu_bs', EuropeanOptionHtml,
         '/eu_go', GeometricOptionHtml,
         '/eu_bt', BinomialTreeHtml,
+        '/im_vol', ImpliedVolHtml,
+        '/aa_price', ArithmeticAsianOptionPricerHtml,
         '/', Index
     )
     app = web.application(urls, globals())
