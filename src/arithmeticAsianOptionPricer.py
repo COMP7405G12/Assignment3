@@ -5,6 +5,7 @@ from scipy.stats import norm
 import web
 from __init__ import render
 
+
 class arithmeticOption:
     def __init__(self, S=0.0, E=0.0, sigma=0.0, r=0.0, T=0.0, n=0, type="", M=0,
                  method=int()):
@@ -86,6 +87,34 @@ class arithmeticOption:
             return confcv
 
 
+class ArithmeticAsianOptionPricerHtml(object):
+    def GET(self):
+        return render.arithmeticAsianOptionPricer()
+
+    def POST(self):
+        test = web.input()
+        try:
+            stock_price = float(test['underlyingStock'])
+            strike_price = float(test['strikePrice'])
+            sigma = float(test['sigma'])
+            risk_free_rate = float(test['interestRate']) / 100
+            maturity_time = float(test['maturityTime'])
+            n = int(test['n'])
+            type = test['type']
+            M = int(test['M'])
+            method = int(test['method'])
+        except ValueError, e:
+            return render.arithmeticAsianOptionPricer("Invalid input, please input again")
+
+        confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
+        # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
+        result = confmc.arithmeticOptPricer()
+        print result
+        return render.arithmeticAsianOptionPricer(result, stock=stock_price, strike=strike_price, sigmaV=sigma,
+                                                  interest=risk_free_rate * 100, maturityT=maturity_time, on=n,
+                                                  otype=type, oM=M, omethod=method)
+
+
 if __name__ == '__main__':
     # testcase 01
     aopricer = arithmeticOption(100.0, 100.0, 0.3, 0.05, 3, 50, "Put", 100000, 0)
@@ -134,30 +163,3 @@ if __name__ == '__main__':
     confmc11 = aopricer.arithmeticOptPricer()
     print confmc10
     print confmc11
-
-class ArithmeticAsianOptionPricerHtml(object):
-
-    def GET(self):
-        return render.arithmeticAsianOptionPricer()
-
-    def POST(self):
-        test = web.input()
-        try:
-            stock_price = float(test['underlyingStock'])
-            strike_price = float(test['strikePrice'])
-            sigma = float(test['sigma'])
-            risk_free_rate = float(test['interestRate']) / 100
-            maturity_time = float(test['maturityTime'])
-            n = int(test['n'])
-            type = test['type']
-            M = int(test['M'])
-            method = int(test['method'])
-        except ValueError, e:
-            return render.arithmeticAsianOptionPricer("Invalid input, please input again")
-
-        confmc = arithmeticOption(stock_price,strike_price,sigma, risk_free_rate,maturity_time,n,type,M,method)
-        #print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
-        result = confmc.arithmeticOptPricer()
-        print result
-        return render.arithmeticAsianOptionPricer(result, stock=stock_price,strike = strike_price, sigmaV=sigma, interest = risk_free_rate * 100, maturityT = maturity_time,  on= n, otype=type, oM=M, omethod=method)
-
