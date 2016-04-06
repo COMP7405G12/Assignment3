@@ -13,20 +13,39 @@ from eu_black_scholes import EuropeanOptionHtml
 from arithmetic_mean_basket_options import ArithmeticMeanBasketOptionsHTML
 from geometricOptions import GeometricOptionHtml
 from Binomial import BinomialTreeHtml
+from impliedVol import ImpliedVolHtml
+from arithmeticAsianOptionPricer import ArithmeticAsianOptionPricerHtml
 
 
 class Index(object):
     def GET(self):
-        return render.index()
+        return '''<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index page of option calculator</title>
+</head>
+<body>
+<h1>Option Calculator</h1>
+<a href="/eu_bs">European call/put option Calculator (Using Black-Scholes)</a><br>
+<a href="/am_bo">Arithmetic/Geometric mean basket call/put options calculator</a><br>
+<a href="/eu_go">Geometric Asian/basket call/put options calculator</a><br>
+<a href="/eu_bt">American call/put option Calculator (Using Binomial Tree)</a><br>
+<a href="/im_vol">Implied Volatility</a><br>
+<a href="/aa_price">Arithmetic Asian Option Pricer</a><br>
+</body>
+</html>'''
+
+urls = (
+    '/am_bo', ArithmeticMeanBasketOptionsHTML,
+    '/eu_bs', EuropeanOptionHtml,
+    '/eu_go', GeometricOptionHtml,
+    '/eu_bt', BinomialTreeHtml,
+    '/im_vol', ImpliedVolHtml,
+    '/aa_price', ArithmeticAsianOptionPricerHtml,
+    '/', Index
+)
+app = web.application(urls, globals())
 
 
 if __name__ == "__main__":
-    urls = (
-        '/am_bo', ArithmeticMeanBasketOptionsHTML,
-        '/eu_bs', EuropeanOptionHtml,
-        '/eu_go', GeometricOptionHtml,
-        '/eu_bt', BinomialTreeHtml,
-        '/', Index
-    )
-    app = web.application(urls, globals())
     app.run()
