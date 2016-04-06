@@ -2,13 +2,13 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>geometric options</title>
+    <title>geometric Asian options</title>
 </head>
 <body>
 <div>
     <a href="/">back</a>
     <h1> Geometric Asian call/put option calculator </h1>
-    <form method="POST" action="eu_go">
+    <form method="POST" action="eu_goa">
         <table width="715" border="0">
             <tbody>
             <tr>
@@ -67,15 +67,15 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, 
                     Option type
                 </td>
                 <td>
-                    <input type="radio" name="style" id="Radio1" value="Put"
-                           $if style != "Call":
+                    <input type="radio" name="style" id="Radio1" value="put"
+                           $if style != "call":
                                 checked=""
                            autocomplete="off">
                     <span>Put Option</span>
                 </td>
                 <td colspan="2">
-                    <input name="style" type="radio" id="Radio2" value="Call"
-                           $if style == "Call":
+                    <input name="style" type="radio" id="Radio2" value="call"
+                           $if style == "call":
                                 checked=""
                            autocomplete="off">
                     <span>Call Option</span>

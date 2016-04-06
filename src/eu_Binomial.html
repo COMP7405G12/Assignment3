@@ -66,14 +66,14 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, 
                 </td>
                 <td>
                     <input type="radio" name="style" id="Radio1" value="put"
-                           $if style != "Call":
+                           $if style != "call":
                                 checked=""
                            autocomplete="off">
                     <span>Put Option</span>
                 </td>
                 <td colspan="2">
                     <input name="style" type="radio" id="Radio2" value="call"
-                           $if style == "Call":
+                           $if style == "call":
                                 checked=""
                            autocomplete="off">
                     <span>Call Option</span>
