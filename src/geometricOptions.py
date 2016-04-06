@@ -43,7 +43,6 @@ class GeometricOptionHtml(object):
 
     def POST(self):
         test = web.input()
-        print "test"
         try:
             stock_price = float(test['underlying'])
             volatility = float(test['vol'])
@@ -66,7 +65,6 @@ class GeometricBasketHtml(object):
         return render.eu_geometricBasket()
     def POST(self):
         test = web.input()
-        print "test"
         try:
             stock_price = str(test['stock']).split(",")
             volatility = str(test['vol']).split(",")
@@ -105,7 +103,6 @@ class GeometricBasketHtml(object):
         try:
             option_price = geometricBasket(stock_list,volatility_list, risk_free_rate,maturity_time,strike_price,corr_array,
                                           type,asset_num)
-
             return render.eu_geometricBasket(option_price, stock=test['stock'], vol=test['vol'], type=test['type'],
                                        strike=test['strike'], time=test['time'], rate=test['rate'],corr=test['corr'],num=test['num'] )
         except Exception,e:
