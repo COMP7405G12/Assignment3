@@ -43,7 +43,6 @@ class GeometricOptionHtml(object):
 
     def POST(self):
         test = web.input()
-        print "test"
         try:
             stock_price = float(test['underlying'])
             volatility = float(test['vol'])
@@ -53,15 +52,61 @@ class GeometricOptionHtml(object):
             observation_times = float(test['observation_times'])
         except ValueError, e:
             return render.eu_geometricOptions("Invalid input, please input again")
-
-        if test['style'] == 'Call':
+        try:
             option_price = geometricAsian(stock_price,volatility, risk_free_rate,maturity_time,strike_price,observation_times,
-                                          "call")
-        else:
-            option_price = geometricAsian(stock_price,volatility, risk_free_rate,maturity_time,strike_price,observation_times,
-                                          "put")
-        return render.eu_geometricOptions(option_price, stock=strike_price, vol=volatility, style=test['style'],
+                                          test['style'])
+            return render.eu_geometricOptions(option_price, stock=strike_price, vol=volatility, style=test['style'],
                                        strike=strike_price, T=maturity_time, r=risk_free_rate * 100, times=observation_times)
+        except Exception,e:
+            return render.eu_Binomial("Illeage input, calculate error:" + e.message)
+
+class GeometricBasketHtml(object):
+    def GET(self):
+        return render.eu_geometricBasket()
+    def POST(self):
+        test = web.input()
+        try:
+            stock_price = str(test['stock']).split(",")
+            volatility = str(test['vol']).split(",")
+            strike_price = float(test['strike'])
+            maturity_time = float(test['time'])
+            risk_free_rate = float(test['rate']) / 100
+            asset_num = int(test['num'])
+            correlation = str(test['corr']).split(",")
+            type = test['type']
+            if len(stock_price) != asset_num:
+                return render.eu_geometricBasket("Invalid stock price input, number of stock prices doesn't equal to asset number")
+            if len(volatility) != asset_num:
+                return render.eu_geometricBasket("Invalid volatility input, number of volatilities doesn't equal to asset number")
+            corr_num = asset_num*(asset_num-1)/2
+            if len(correlation) != corr_num:
+                return render.eu_geometricBasket("Invalid correlation input, number of correlations doesn't equal to asset number")
+            #change type to float
+            stock_list = [float(i.strip()) for i in stock_price]
+            volatility_list = [float(i.strip()) for i in volatility]
+            correlation = [float(i.strip()) for i in correlation]
+            #construct correlation array
+            corr_array = []
+            for i in range(asset_num):
+                corr_array.append([])
+                for j in range(asset_num):
+                    if j == i:
+                        corr_array[i].append(1)
+                    elif j > i:
+                        corr_array[i].append(correlation.pop(0))
+                    else:
+                        corr_array[i].append(corr_array[j][i])
+            #print corr_array
+
+        except ValueError, e:
+            return render.eu_geometricBasket("Invalid input, please input again")
+        try:
+            option_price = geometricBasket(stock_list,volatility_list, risk_free_rate,maturity_time,strike_price,corr_array,
+                                          type,asset_num)
+            return render.eu_geometricBasket(option_price, stock=test['stock'], vol=test['vol'], type=test['type'],
+                                       strike=test['strike'], time=test['time'], rate=test['rate'],corr=test['corr'],num=test['num'] )
+        except Exception,e:
+            return render.eu_geometricBasket("Illeage input, calculate error:" + e.message)
 
 if __name__ == "__main__":
     print geometricAsian(100,0.3,0.05,3,100,50,"put")
