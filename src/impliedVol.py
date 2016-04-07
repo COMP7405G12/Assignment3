@@ -1,6 +1,9 @@
 import math
-from scipy.stats import norm
+
 import web
+import numpy as np
+from scipy.stats import norm
+
 from __init__ import render
 
 
@@ -69,7 +72,6 @@ class impliedVol:
         return call, cvega, put, pvega
 
 
-
 class ImpliedVolHtml(object):
     def GET(self):
         return render.impliedVol()
@@ -78,18 +80,18 @@ class ImpliedVolHtml(object):
         test = web.input()
         try:
             stock_price = float(test['underlyingStock'])
-            risk_free_rate = float(test['interestRate']) / 100
+            risk_free_rate = float(test['interestRate'])
             repo_rate = float(test['repoRate'])
             maturity_time = float(test['maturityTime'])
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
             type = test['type']
-            t = float(test['t'])
         except ValueError, e:
             return render.impliedVol("Invalid input, please input again")
 
-        impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
-        #print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
+        impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, 0)
         Vol = impliedV.impliedVol()
-        #print Vol
-        return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate * 100, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
+        if Vol is None or np.isnan(Vol):
+            Vol = "Volatility under given input is None"
+        return render.impliedVol(Vol, stock=stock_price, interest=risk_free_rate, repo=repo_rate,
+                                 maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)

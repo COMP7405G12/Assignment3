@@ -26,12 +26,12 @@ class Index(object):
 <body>
 <h1>Option Calculator</h1>
 <a href="/eu_bs">European call/put option Calculator (Using Black-Scholes)</a><br>
-<a href="/am_bo">Arithmetic/Geometric mean basket call/put options calculator</a><br>
+<a href="/im_vol">Implied Volatility</a><br>
 <a href="/eu_goa">Geometric Asian call/put options calculator</a><br>
 <a href="/eu_gob">Geometric Basket call/put options calculator</a><br>
-<a href="/eu_bt">American call/put option Calculator (Using Binomial Tree)</a><br>
-<a href="/im_vol">Implied Volatility</a><br>
 <a href="/aa_price">Arithmetic Asian Option Calculator (Monte Carlo)</a><br>
+<a href="/am_bo">Arithmetic mean basket call/put options calculator</a><br>
+<a href="/eu_bt">American call/put option Calculator (Using Binomial Tree)</a><br>
 </body>
 </html>'''
 
