@@ -50,7 +50,6 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
                 <td>
                     <input type="text" name="interestRate" id="interestRate" style="width: 130px" autocomplete="off"
                            value="$interest">
-                    %
                 </td>
             </tr>
             <tr>
@@ -62,15 +61,7 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
                             value="$opremium">
                 </td>
             </tr>
-            <tr>
-                <td>
-                    t
-                </td>
-                <td>
-                    <input type="text" name="t" id="t" style="width: 150px" autocomplete="off"
-                            value="$ot">
-                </td>
-            </tr>
+
             <tr>
                 <td>
                     Option type
@@ -96,8 +87,9 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
     </form>
     $if isinstance(Vol, float):
         Implied Volatility is: $Vol
-    $elif Vol:
-        <h1>$Vol</h1>
+    $else:
+        Implied Volatility is: $Vol
+
 </div>
 </body>
 </html>
