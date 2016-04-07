@@ -8,7 +8,6 @@
 
 import web
 
-from __init__ import render
 from eu_black_scholes import EuropeanOptionHtml
 from arithmetic_mean_basket_options import ArithmeticMeanBasketOptionsHTML
 from geometricOptions import GeometricOptionHtml
@@ -28,17 +27,17 @@ class Index(object):
 <h1>Option Calculator</h1>
 <a href="/eu_bs">European call/put option Calculator (Using Black-Scholes)</a><br>
 <a href="/am_bo">Arithmetic/Geometric mean basket call/put options calculator</a><br>
-<a href="/eu_go">Geometric Asian/basket call/put options calculator</a><br>
+<a href="/eu_goa">Geometric Asian call/put options calculator</a><br>
 <a href="/eu_bt">American call/put option Calculator (Using Binomial Tree)</a><br>
 <a href="/im_vol">Implied Volatility</a><br>
-<a href="/aa_price">Arithmetic Asian Option Pricer</a><br>
+<a href="/aa_price">Arithmetic Asian Option Calculator (Monte Carlo)</a><br>
 </body>
 </html>'''
 
 urls = (
     '/am_bo', ArithmeticMeanBasketOptionsHTML,
     '/eu_bs', EuropeanOptionHtml,
-    '/eu_go', GeometricOptionHtml,
+    '/eu_goa', GeometricOptionHtml,
     '/eu_bt', BinomialTreeHtml,
     '/im_vol', ImpliedVolHtml,
     '/aa_price', ArithmeticAsianOptionPricerHtml,

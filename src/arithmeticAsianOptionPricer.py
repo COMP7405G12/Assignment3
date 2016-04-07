@@ -74,7 +74,7 @@ class arithmeticOption:
             Pmean = arithPayoff.mean()
             Pstd = arithPayoff.std()
             confmc = [Pmean - 1.96 * Pstd / math.sqrt(self.M), Pmean + 1.96 * Pstd / math.sqrt(self.M)]
-            return confmc
+            return (Pmean, confmc)
         if self.method == 1:
             # control variate
             covXY = numpy.cov([arithPayoff, geoPayoff], ddof=0)[0][1]
@@ -83,12 +83,12 @@ class arithmeticOption:
             Zmean = Z.mean()
             Zstd = Z.std()
             confcv = [Zmean - 1.96 * Zstd / math.sqrt(self.M), Zmean + 1.96 * Zstd / math.sqrt(self.M)]
-            return confcv
+            return (Zmean, confcv)
 
 
 class ArithmeticAsianOptionPricerHtml(object):
     def GET(self):
-        return render.arithmeticAsianOptionPricer()
+        return render.arithmeticAsianOptionCalculator()
 
     def POST(self):
         test = web.input()
@@ -96,21 +96,21 @@ class ArithmeticAsianOptionPricerHtml(object):
             stock_price = float(test['underlyingStock'])
             strike_price = float(test['strikePrice'])
             sigma = float(test['sigma'])
-            risk_free_rate = float(test['interestRate']) / 100
+            risk_free_rate = float(test['interestRate'])
             maturity_time = float(test['maturityTime'])
             n = int(test['n'])
             type = test['type']
             M = int(test['M'])
             method = int(test['method'])
         except ValueError, e:
-            return render.arithmeticAsianOptionPricer("Invalid input, please input again")
+            return render.arithmeticAsianOptionCalculator("Invalid input, please input again")
 
         confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
         # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         result = confmc.arithmeticOptPricer()
         print result
-        return render.arithmeticAsianOptionPricer(result, stock=stock_price, strike=strike_price, sigmaV=sigma,
-                                                  interest=risk_free_rate * 100, maturityT=maturity_time, on=n,
+        return render.arithmeticAsianOptionCalculator(result, stock=stock_price, strike=strike_price, sigmaV=sigma,
+                                                  interest=risk_free_rate, maturityT=maturity_time, on=n,
                                                   otype=type, oM=M, omethod=method)
 
 
