@@ -3,6 +3,7 @@ from scipy.stats import norm
 import web
 from __init__ import render
 
+
 class impliedVol:
     def __init__(self, S=float(), r=float(), q=float(), T=float(), K=float(), premium=float(), type="", t=float()):
 
@@ -14,16 +15,10 @@ class impliedVol:
         self.premium = premium
         self.type = type
         self.t = t
-        #print ("k=%s, S=%s, r=%s, q=%s, T=%s, primium=%s, type=%s",self.K, self.S, self.r, self.q, self.T, self.premium, self.type)
-
 
     def impliedVol(self):
-        sigmahat = float()
-        sigma = float()
-        sigmadiff = float()
-        sigmahat=math.sqrt(2 * abs((math.log(self.S / self.K) + self.r * self.T) / self.T))
-
-        'initial guess'
+        # initial guess
+        sigmahat = math.sqrt(2 * abs((math.log(self.S / self.K) + self.r * self.T) / self.T))
 
         tol = 0.00000001
 
@@ -32,13 +27,13 @@ class impliedVol:
         n = 1
         nmax = 100
 
-        while ((sigmadiff >= tol) & (n < nmax)):
+        while (sigmadiff >= tol) & (n < nmax):
             C, Cvega, P, Pvega = self.blackschole(sigma)
             if self.type == 'Call':
                 if Cvega == 0:
                     return None
                 else:
-                    increment = float(C - self.premium)/Cvega
+                    increment = float(C - self.premium) / Cvega
                     sigma -= increment
                     n += 1
                     sigmadiff = abs(increment)
@@ -47,16 +42,17 @@ class impliedVol:
                 if Pvega == 0:
                     return None
                 else:
-                    increment = float(P - self.premium)/Pvega
+                    increment = float(P - self.premium) / Pvega
                     sigma -= increment
                     n += 1
                     sigmadiff = abs(increment)
+        print sigma
         return sigma
-
 
     def blackschole(self, sigma=float()):
 
-        item1 = (math.log(self.S/float(self.K)) + float(self.r - self.q) * (self.T - self.t))/float(sigma * math.sqrt(self.T - self.t))
+        item1 = (math.log(self.S / float(self.K)) + float(self.r - self.q) * (self.T - self.t)) / float(
+            sigma * math.sqrt(self.T - self.t))
         item2 = 0.5 * sigma * math.sqrt(self.T - self.t)
 
         d1 = float(item1) + item2
@@ -68,10 +64,12 @@ class impliedVol:
         call = float(item3 * norm.cdf(d1) - item4 * norm.cdf(d2))
         put = float(item4 * norm.cdf(-d2) - item3 * norm.cdf(-d1))
 
-        cvega = float(self.S * math.sqrt(self.T - self.t) * norm.pdf(d1))
+        cvega = self.S * math.sqrt(self.T - self.t) * math.exp(-0.5 * d1 ** 2) / math.sqrt(2 * math.pi)
         pvega = cvega
 
-        return (call, cvega, put, pvega)
+        return call, cvega, put, pvega
+
+
 
 class ImpliedVolHtml(object):
     def GET(self):
@@ -81,33 +79,18 @@ class ImpliedVolHtml(object):
         test = web.input()
         try:
             stock_price = float(test['underlyingStock'])
-            risk_free_rate = float(test['interestRate']) / 100
+            risk_free_rate = float(test['interestRate'])
             repo_rate = float(test['repoRate'])
             maturity_time = float(test['maturityTime'])
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
             type = test['type']
-            t = float(test['t'])
+            t = 0.0
         except ValueError, e:
             return render.impliedVol("Invalid input, please input again")
 
         impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
-        #print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
+        print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         Vol = impliedV.impliedVol()
         #print Vol
-        return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate * 100, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)

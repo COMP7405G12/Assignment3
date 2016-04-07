@@ -1,14 +1,17 @@
-$def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremium=0, otype='Call', ot=0)
+$def with (result=None, stock=0, strike=0, sigmaV=0, interest=0, maturityT=0,  on=0, otype='Call', oM=0, omethod=0)
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Implied volatility Calculator</title>
+    <title>Arithmetic Asian Option Price Calculate</title>
 </head>
 <body>
 <div>
     <a href="/">back</a>
-    <h1> Call/put option implied volatility (Bid/Ask) </h1>
-    <form method="POST" action="im_vol">
+    <h1> Call/put Arithmetic Asian option price calculate</h1>
+    <h3>Arithmetic Asian option: it has all input parameters: underlying stock price, strike price, volatility, time to maturity, risk free interest rate
+        number of observation times of geometric asian option average, M, the number of paths for Monte Carlo simulation, control method(input o when there is no control method,
+        input 1 for geometric asian option variant control). </h3>
+    <form method="POST" action="aa_price">
         <table width="715" border="0">
             <tbody>
             <tr>
@@ -29,14 +32,14 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
             </tr>
             <tr>
                 <td>
-                    <span>Repo Rate</span>
+                    <span>Volatility</span>
                 </td>
                 <td>
-                    <input type="text" name="repoRate" id="repoRate" style="width: 150px" autocomplete="off"
-                           value="$repo">
+                    <input type="text" name="sigma" id="sigma" style="width: 150px" autocomplete="off"
+                           value="$sigmaV">
                 </td>
                 <td>
-                    <span>Time to Maturity (In years)</span>
+                    <span>Time to Maturity(In years)</span>
                 </td>
                 <td>
                     <input type="text" name="maturityTime" id="maturityTime" style="width: 150px" autocomplete="off"
@@ -54,14 +57,32 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
             </tr>
             <tr>
                 <td>
-                    Premium
+                    n
                 </td>
                 <td>
-                    <input type="text" name="premium" id="premium" style="width: 150px" autocomplete="off"
-                            value="$opremium">
+                    <input type="text" name="n" id="n" style="width: 150px" autocomplete="off"
+                            value="$on">
                 </td>
             </tr>
-
+            <tr>
+                <td>
+                    M
+                </td>
+                <td>
+                    <input type="text" name="M" id="M" style="width: 150px" autocomplete="off"
+                            value="$oM">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Control Method <br>
+                    (input 0 or 1)
+                </td>
+                <td>
+                    <input type="text" name="method" id="method" style="width: 150px" autocomplete="off"
+                            value="$omethod">
+                </td>
+            </tr>
             <tr>
                 <td>
                     Option type
@@ -85,10 +106,11 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
         </table>
         <input name="Calculate" type="submit" value="Calculate">
     </form>
-    $if isinstance(Vol, float):
-        Implied Volatility is: $Vol
-    $else:
-        Implied Volatility is: $Vol
+    $if isinstance(result, float):
+        confidence interval: $result[1]
+    $elif result:
+        Option price: $result[0] <br>Confidence interval: $result[1]
+
 
 </div>
 </body>
