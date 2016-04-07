@@ -10,11 +10,10 @@ import web
 
 from eu_black_scholes import EuropeanOptionHtml
 from arithmetic_mean_basket_options import ArithmeticMeanBasketOptionsHTML
-from geometricOptions import GeometricOptionHtml
+from geometricOptions import GeometricOptionHtml, GeometricBasketHtml
 from Binomial import BinomialTreeHtml
 from impliedVol import ImpliedVolHtml
 from arithmeticAsianOptionPricer import ArithmeticAsianOptionPricerHtml
-from geometricOptions import  GeometricBasketHtml
 
 
 class Index(object):

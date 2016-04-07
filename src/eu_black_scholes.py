@@ -25,7 +25,7 @@ def calculate_d2(s, e, tau, sigma, r):
 
 
 def calculate_call_black_scholes(s, e, tau, sigma, r):
-    '''
+    """
     main function to calculate Black-Scholes call option price
     :param s: Stock price at time t
     :param e: Strike price
@@ -33,7 +33,7 @@ def calculate_call_black_scholes(s, e, tau, sigma, r):
     :param sigma: volatility
     :param r: risk free rate
     :return: the call price of Black-Scholes
-    '''
+    """
     d1 = calculate_d1(s, e, tau, sigma, r)
     d2 = calculate_d2(s, e, tau, sigma, r)
     n1 = norm.cdf(d1)
@@ -43,7 +43,7 @@ def calculate_call_black_scholes(s, e, tau, sigma, r):
 
 
 def calculate_put_black_scholes(s, e, tau, sigma, r):
-    '''
+    """
     main function to calculate black scholes put option price
     :param s: Stock price at time t
     :param e: Strike price
@@ -51,7 +51,7 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     :param sigma: volatility
     :param r: risk free rate
     :return: the put price of black_scholes
-    '''
+    """
     d1 = calculate_d1(s, e, tau, sigma, r)
     d2 = calculate_d2(s, e, tau, sigma, r)
     n1 = norm.cdf(-d1)
@@ -59,7 +59,11 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     p = e * math.exp(-r * tau) * n2 - s * n1
     return p
 
+
 class EuropeanOptionHtml(object):
+    """
+    Web page to show European put / call option calculator
+    """
     def GET(self):
         return render.eu_black_scholes()
 

@@ -33,10 +33,9 @@ def generate_two_correlated_random_variables(means, stds, corr, number):
 
 
 class Option(object):
-    '''
+    """
     Class to represent a option
-    '''
-
+    """
     def __init__(self, s0, strike_price, sigma, option_type, tau, risk_free_rate):
         self.sigma = float(sigma)
         self.type = option_type
@@ -46,6 +45,11 @@ class Option(object):
         self.risk_free_rate = risk_free_rate
 
     def get_stock_price_array(self, random_value):
+        """
+        Use input random_value to calculate the stock price list
+        :param random_value: a list of random value
+        :return: a stock price list
+        """
         stock_price_list = []
         for zi in random_value:
             stock_price = self.s0 * math.exp((self.risk_free_rate - 0.5 * self.sigma ** 2) * self.tau +
@@ -77,14 +81,11 @@ class BasketOptions(object):
                     self.rho[i].append(self.rho[j][i])
 
     def _get_basket_price(self, path_number):
-        ''' Return the basket price, this will be different as the option type difference '''
+        """ Return the basket price, this will be different as the option type difference """
 
         # fix all the variable
         random.seed(0)
 
-        # z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], self.rho[0][1], path_number)
-        # s1 = self.option[0].get_stock_price_array(z1)
-        # s2 = self.option[1].get_stock_price_array(z2)
         z = random.multivariate_normal([0] * self.option_num, self.rho, path_number).T
         b = self.option[0].get_stock_price_array(z[0])
         s = [self.option[0].get_stock_price_array(z[0])]
