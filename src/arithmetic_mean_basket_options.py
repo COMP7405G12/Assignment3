@@ -265,3 +265,23 @@ class ArithmeticMeanBasketOptionsHTML(object):
                                                          strike=strike, corr=corr, rate=rate * 100,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
                                                          price=price_list)
+
+
+if __name__ == "__main__":
+    sigma = [0.5, 0.5]
+    stock_price = [100,100]
+    k = 100
+    rho = [0.5]
+    test = BasketOptions(stock_price=stock_price[:], k=k, sigma=sigma[:], option_type=PUT_OPTION, tau=3, rho=rho[:],
+                         risk_free_rate=0.05)
+    a = test.get_basket_price(100000, False)
+    b = test.get_basket_price(100000, True)
+
+    print "{p[0]:.2f}, [{p[1]:.2f}, {p[2]:.2f}]\n{q[0]:.2f}, [{q[1]:.2f}, {q[2]:.2f}]".format(p=a, q=b)
+
+    test = BasketOptions(stock_price=stock_price, k=k, sigma=sigma, option_type=CALL_OPTION, tau=3, rho=rho,
+                         risk_free_rate=0.05)
+    a = test.get_basket_price(100000, False)
+    b = test.get_basket_price(100000, True)
+    print "{p[0]:.2f}, [{p[1]:.2f}, {p[2]:.2f}]\n{q[0]:.2f}, [{q[1]:.2f}, {q[2]:.2f}]".format(p=a, q=b)
+
