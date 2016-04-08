@@ -8,9 +8,9 @@
 
 import math
 
+import web
 import numpy as np
 import numpy.random as random
-import web
 from scipy.stats import norm
 
 from __init__ import render
@@ -77,6 +77,7 @@ class BasketOptions(object):
         # fix all the variable
         random.seed(0)
 
+        # generate the random values and calculate all the stock price
         z = random.multivariate_normal([0] * self.option_num, self.rho, path_number).T
         b = self.option[0].get_stock_price_array(z[0])
         s = [self.option[0].get_stock_price_array(z[0])]
@@ -84,7 +85,7 @@ class BasketOptions(object):
             s.append(self.option[i].get_stock_price_array(z[i]))
             b += s[-1]
 
-        b = b / self.option_num
+        b /= self.option_num
         if self.type == CALL_OPTION:
             maturity_price = b - self.strike_price
         else:
@@ -176,7 +177,8 @@ class ArithmeticMeanBasketOptionsHTML(object):
         return render.arithmetic_mean_basket_options()
 
     def POST(self):
-        data = web.input()
+
+        # init some variable values
         stock_price = '100, 100'
         volatility = '0.3, 0.3'
         strike = 100
@@ -186,6 +188,8 @@ class ArithmeticMeanBasketOptionsHTML(object):
         num = None
         option_type = PUT_OPTION
         cv_type = 'GBO'
+
+        data = web.input()
         try:
             stock_price = data['stock']
             volatility = data['vol']
