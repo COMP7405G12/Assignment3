@@ -10,7 +10,7 @@ $def with (result=None, stock=0, strike=0, sigmaV=0, interest=0, maturityT=0,  o
     <h1> Call/put Arithmetic Asian option price calculate</h1>
     <h3>Arithmetic Asian option: it has all input parameters: underlying stock price, strike price, volatility, time to maturity, risk free interest rate
         number of observation times of geometric asian option average, M, the number of paths for Monte Carlo simulation, control method(input o when there is no control method,
-        input 1 for geometric asian option variant control). <h3>
+        input 1 for geometric asian option variant control). </h3>
     <form method="POST" action="aa_price">
         <table width="715" border="0">
             <tbody>
@@ -39,7 +39,7 @@ $def with (result=None, stock=0, strike=0, sigmaV=0, interest=0, maturityT=0,  o
                            value="$sigmaV">
                 </td>
                 <td>
-                    <span>Time to Maturity</span>
+                    <span>Time to Maturity(In years)</span>
                 </td>
                 <td>
                     <input type="text" name="maturityTime" id="maturityTime" style="width: 150px" autocomplete="off"
@@ -75,7 +75,8 @@ $def with (result=None, stock=0, strike=0, sigmaV=0, interest=0, maturityT=0,  o
             </tr>
             <tr>
                 <td>
-                    Control Method
+                    Control Method <br>
+                    (input 0 or 1)
                 </td>
                 <td>
                     <input type="text" name="method" id="method" style="width: 150px" autocomplete="off"
@@ -108,7 +109,8 @@ $def with (result=None, stock=0, strike=0, sigmaV=0, interest=0, maturityT=0,  o
     $if isinstance(result, float):
         confidence interval: $result[1]
     $elif result:
-        <h3>Option price: $result[0] <br>Confidence interval: $result[1]</h3>
+        Option price: $result[0] <br>Confidence interval: $result[1]
+
 
 </div>
 </body>
