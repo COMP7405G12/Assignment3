@@ -1,0 +1,170 @@
+$def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremium=0, otype='Call', ot=0)
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Implied volatility Calculator</title>
+    <link rel="stylesheet" href="static/css/style.css" type="text/css" media="all" />
+	<style type="text/css">
+        a:link {
+        color: #1E046C;
+        }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<div id="header">
+	<div class="shell">
+		<!-- Logo + Top Nav -->
+		<div id="top">
+            <h1><a href="/eu_bt">Binominal Tree</a></h1>
+            <h1> | </h1>
+            <h1> <a href="/aa_price">Arithmetic Asian Option Pricer</a></h1>
+            <h1> | </h1>
+            <h1> <a href="">Implied Volatility</a></h1>	
+		</div>
+		<!-- End Logo + Top Nav -->
+    </div>
+</div>
+<!-- End Header -->
+
+<!-- Container -->
+<div id="container" >
+	<div class="shell">
+		<!-- Main -->
+		<div id="main">
+			<div class="cl">&nbsp;</div>
+			
+		<!-- Content -->
+			<div id="content" >
+		
+			  <!-- Box -->
+				<div class="box">
+					<!-- Box Head -->
+					<div class="box-head">
+					  <h2>Implied Volatility Calculate</h2>
+					</div>
+					<!-- End Box Head -->
+					
+					<form action="im_vol" method="POST">
+						
+						<!-- Form -->
+						<div class="form">
+                        <table width="715" border="0">
+            				<tbody>
+            					<tr>
+                					<td width="21%"><span>Stock Price</span></td>
+                					<td>
+                    					<input type="text" name="underlyingStock" id="underlyingStock" style="width: 150px" autocomplete="off" value="$stock">
+                					</td>
+
+                					<td width="24%"><span>Strike Price</span></td>
+                					<td>
+                    					<input type="text" name="strikePrice" id="strikePrice" style="width: 150px" autocomplete="off" value="$strike">
+                					</td>
+            					</tr>
+            					<tr>
+                                    <td>
+                                        <span>Repo Rate</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="repoRate" id="repoRate" style="width: 150px" autocomplete="off"
+                                               value="$repo">
+                                    </td>
+                               
+                                    <td>
+                                        <span>Maturity time/years</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="maturityTime" id="maturityTime" style="width: 150px" autocomplete="off"
+                                               value="$maturityT">
+                                    </td>
+            					</tr>
+            					<tr>
+                                    <td>
+                                        <span>Risk free rate</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="interestRate" id="interestRate" style="width: 150px" autocomplete="off"
+                                               value="$interest">
+                                    </td>
+            					
+                                    <td>
+                                        <span>Premium</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="premium" id="premium" style="width: 150px" autocomplete="off"
+                                                value="$opremium">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <span>Option type</span>
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="type" id="Radio1" value="Put"
+                                               $if otype !='Call':
+                                                    checked=""
+                                               autocomplete="off">
+                                        <span>Put Option</span>
+                                    </td>
+                                    <td colspan="2">
+                                        <input name="type" type="radio" id="Radio2" value="Call"
+                                               $if otype=='Call':
+                                                    checked=""
+                                               autocomplete="off">
+                                        <span>Call Option</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                	<td>
+                                        Implied Volatility:
+                                    </td>
+                                	<td>
+                                		<input type="text" disabled readonly id="volatility" style="width: 150px" value=$Vol ></input>
+                                    </td>
+                                </tr>
+                                
+            </tbody>
+        </table>
+                       
+                            
+													
+</div>
+						<!-- End Form -->
+						
+						<!-- Form Buttons -->
+						<div class="buttons">
+						  <input type="submit" class="button" value="Calculate" />
+						</div>
+						<!-- End Form Buttons -->
+					</form>
+                    
+				</div>
+				<!-- End Box -->
+				
+			</div>
+			<!-- End Content -->
+
+			
+		  <div class="cl">&nbsp;</div>			
+		</div>
+		<!-- Main -->
+	</div>
+</div>
+<!-- End Container -->
+
+</body>
+
+<!-- Footer -->
+<div id="footer">
+	<div class="shell">
+		<span class="left">&copy; 2016-YOUAN WANG, HAO HU, DAINA LI</span>
+		<span class="right">
+			 
+		</span>
+	</div>
+</div>
+<!-- End Footer -->
+</html>
