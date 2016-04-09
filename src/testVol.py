@@ -42,6 +42,7 @@ if __name__ == '__main__':
     CallAskVol2, CallBidVol2, PutAskVol2, PutBidVol2)
 
     # [test case 07] output: 0.2
-    impliedV5.__init__(100, 0.01, 0, 0.5, 100, 5.3772721531, 'Put', 0)
+    #impliedV5.__init__(100, 0.01, 0, 0.5, 100, 5.3772721531, 'Put', 0)
+    impliedV5.__init__(100,0.05,0.2,3,100,10,'Put',0)
     testVol = impliedV5.impliedVol()
     print testVol

@@ -47,9 +47,9 @@ h2 { font-size:15px; font-weight: normal; }
 h3 { font-size:12px; line-height:14px; font-weight: normal; }
 h3 a{ text-decoration: none; }
 
+.box{ align-content:center; position:fixed; left:25%; top: 30%}
 
-
-.shell { width:988px; margin:0 auto; }
+.shell { width:auto; margin:0 auto; }
 
 #header { height:89px; background:url(images/header.gif); white-space:nowrap; }
 #header h1{
@@ -58,14 +58,14 @@ h3 a{ text-decoration: none; }
 	padding-top: 12px;
 }
 
-#top { height:53px; }
+#top { height:53px; position:fixed; left: 8%}
 
 
 #container { padding:20px 0;}
 
 
 #main {}
-#content { float:left; width:750px; }
+#content { float:left; width:auto; align-content:center}
 #sidebar { float:right; width:225px; }
 
 
@@ -76,7 +76,7 @@ h3 a{ text-decoration: none; }
 .table tr:hover td{ background:#fff9e1; }
 .table a.ico{ }
 
-.box { background:#fbfcfc; height:auto; padding:1px; margin-bottom:20px; }
+.box { background:#fbfcfc; height:auto; padding:1px; margin-bottom:20px;}
 .box-head { background:#1d61de; height:32px; color:#fff; padding: 0 10px; line-height:32px; white-space:nowrap; border-bottom:solid 1px #fff; }
 .box-head .right{ padding-top:5px; line-height:13px;}
 .box-head .right label,
@@ -137,16 +137,15 @@ textarea.size1 { height:180px; }
 .add-button:hover { color:#333;}
 
 
-#footer { height:44px; background:url(images/footer.gif); line-height:44px; color:#fff;}
+#footer { 
+position:absolute;
+bottom:0;
+width:100%;
+height:44px;
+background:url(images/footer.gif); line-height:44px; color:#fff;}
 #footer a{ color:#fff; }
 
-
-.msg { position:relative; padding-right:35px; margin-bottom:10px; }
-.msg p{ padding:9px 10px 9px 40px; font-size:12px; background-repeat:no-repeat; background-position:10px 5px;}
-.msg a.close{ font-size:0; line-height:0; position:absolute; top:0; right:0; width:34px; height:34px; background:url(images/close.gif); text-indent: -4000px;}
-
-.msg-ok p{ background-color:#fffac2; border:solid 1px #dbd6a2; color:#5e5c40; background-image:url(images/msg-ok.gif); }
-.msg-error p{ background-color:#f3c598; border:solid 1px #e8b084; color:#ba4c32; background-image:url(images/msg-error.gif);  }
+ 
 
 /*** CSS3 ***/
 .box { -moz-border-radius:5px; -webkit-border-radius:5px; -moz-box-shadow: 0 0 6px #978f6c; -webkit-box-shadow: 0 0 6px #978f6c;}

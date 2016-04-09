@@ -86,12 +86,12 @@ class ImpliedVolHtml(object):
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
             type = test['type']
+            t = 0.0
         except ValueError, e:
             return render.impliedVol("Invalid input, please input again")
 
-        impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, 0)
+        impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
+        print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         Vol = impliedV.impliedVol()
-        if Vol is None or np.isnan(Vol):
-            Vol = "Volatility under given input is None"
-        return render.impliedVol(Vol, stock=stock_price, interest=risk_free_rate, repo=repo_rate,
-                                 maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
+        #print Vol
+        return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)

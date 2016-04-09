@@ -109,7 +109,7 @@ class ArithmeticAsianOptionPricerHtml(object):
         # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         result = confmc.arithmeticOptPricer()
         print result
-        return render.arithmeticAsianOptionCalculator(result, stock=stock_price, strike=strike_price, sigmaV=sigma,
+        return render.arithmeticAsianOptionCalculator(option_price=result[0],interval='['+str(result[1][0])+','+str(result[1][1])+']', stock=stock_price, strike=strike_price, sigmaV=sigma,
                                                   interest=risk_free_rate, maturityT=maturity_time, on=n,
                                                   otype=type, oM=M, omethod=method)
 
