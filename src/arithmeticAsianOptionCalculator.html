@@ -16,18 +16,18 @@ $def with (option_price='', interval='', stock=0, strike=0, sigmaV=0, interest=0
 	<div class="shell">
 		<!-- Logo + Top Nav -->
 		<div id="top">
-        	<h1><a href="/am_bo">Arithmetic Mean Basket Options</a></h1>
-        	<h1> | </h1>
-            <h1><a href="/eu_bs">European Option</a></h1>
-        	<h1> | </h1>
-            <h1><a href="/eu_goa">Geometric Option</a></h1>
-        	<h1> | </h1>
-        	<h1><a href="/eu_gob">Geometric Basket</a></h1>
-        	<h1> | </h1>
-            <h1><a href="/eu_bt">Binominal Tree</a></h1>
-            <h1> | </h1>
+        	<h1><a href="/am_bo">Arithmetic Basket Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_bs">European Option(BS)</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_goa">Geometric Asian Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+        	<h1><a href="/eu_gob">Geometric Basket Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_bt">American Option(BT)</a></h1>
+            <h1 style="color:black"> | </h1>
             <h1> <a href="/aa_price">Arithmetic Asian Option</a></h1>
-            <h1> | </h1>
+            <h1 style="color:black"> | </h1>
             <h1> <a href="/im_vol">Implied Volatility</a></h1>
 		</div>
 		<!-- End Logo + Top Nav -->
@@ -36,172 +36,159 @@ $def with (option_price='', interval='', stock=0, strike=0, sigmaV=0, interest=0
 <!-- End Header -->
 
 <!-- Container -->
-<div>
-    <br>
-    <h2> Call/put Arithmetic Asian option price calculate</h2>
-    <h2>Arithmetic Asian option: it has all input parameters: underlying stock price, strike price, volatility, time to maturity, risk free interest rate
-        number of observation times of geometric asian option average, M, the number of paths for Monte Carlo simulation, control method(input o when there is no control method,
-        input 1 for geometric asian option variant control). </h2>
-
-
-    <div id="container">
+<div id="container">
 	<div class="shell">
 		<!-- Main -->
 		<div id="main"> <!-- Content -->
 			<div id="content">
-
-			  <!-- Box -->
+                <!-- Box -->
 				<div class="box">
 					<!-- Box Head -->
 					<div class="box-head">
 					  <h2>Arithmetic Asian Option Calculate</h2>
 					</div>
 					<!-- End Box Head -->
-
-					<form action="aa_price" method="POST">
-
-						<!-- Form -->
+                    <form action="aa_price" method="POST">
+                        <!-- Form -->
 						<div class="form">
-                        <table width="715" border="0">
-            				<tbody>
+                            <table width="800" border="0">
+                                <tbody>
+                                    <tr>
+                                        <td width="200">
+                                            <span>Stock Price</span>
+                                        </td>
+                                        <td width="200">
+                                            <input type="text" name="underlyingStock" id="underlyingStock"  autocomplete="off"
+                                                   value="$stock">
+                                        </td>
+                                        <td>
+                                            <span>Strike Price</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="strikePrice" id="strikePrice"  autocomplete="off"
+                                                   value="$strike">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span>Volatility</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="sigma" id="sigma"  autocomplete="off"
+                                                   value="$sigmaV">
+                                        </td>
+                                        <td>
+                                            Time to Maturity(In years)
+                                        </td>
+                                        <td>
+                                            <input type="text" name="maturityTime" id="maturityTime"  autocomplete="off"
+                                                   value="$maturityT">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span>Risk free rate</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="interestRate" id="interestRate"  autocomplete="off"
+                                                   value="$interest">
+                                            %
+                                        </td>
+                                        <td>
+                                            <span>Observation Times</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="n" id="n"  autocomplete="off"
+                                                    value="$on">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                           <span>Path Number</span>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="M" id="M"  autocomplete="off"
+                                                    value="$oM">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span>Option type</span>
+                                        </td>
+                                        <td>
+                                            <input type="radio" name="type" id="Radio1" value="Put"
+                                                   $if otype !='Call':
+                                                        checked=""
+                                                   autocomplete="off">
+                                            <span>Put Option</span>
+                                        </td>
+                                        <td colspan="2">
+                                            <input name="type" type="radio" id="Radio2" value="Call"
+                                                   $if otype=='Call':
+                                                        checked=""
+                                                   autocomplete="off">
+                                            <span>Call Option</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            Control Variate Method
+                                        </td>
+                                        <td>
+                                            <input type="radio" name="method" id="Radio3" value="0"
+                                                   $if omethod != "1":
+                                                       checked=""
+                                                   autocomplete="off">
+                                            <span>No Control Variate</span>
+                                        </td>
+                                        <td colspan="2">
+                                            <input name="method" type="radio" id="Radio4" value="1"
+                                                   $if omethod == "1":
+                                                       checked=""
+                                                   autocomplete="off">
+                                            <span>Geometric Asian Option</span>
+                                        </td>
+                                    </tr>
 
-                                <tr>
-                                    <td width="21%">
-                                        <span>Stock Price</span>
-                                    </td>
-                                    <td width="28%">
-                                        <input type="text" name="underlyingStock" id="underlyingStock" style="width: 150px" autocomplete="off"
-                                               value="$stock">
-                                    </td>
-                                    <td width="24%">
-                                        <span>Strike Price</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="strikePrice" id="strikePrice" style="width: 150px" autocomplete="off"
-                                               value="$strike">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>Volatility</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="sigma" id="sigma" style="width: 150px" autocomplete="off"
-                                               value="$sigmaV">
-                                    </td>
-                                    <td>
-                                        Time to Maturity(In years)
-                                    </td>
-                                    <td>
-                                        <input type="text" name="maturityTime" id="maturityTime" style="width: 150px" autocomplete="off"
-                                               value="$maturityT">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>Risk free rate</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="interestRate" id="interestRate" style="width: 150px" autocomplete="off"
-                                               value="$interest">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>n</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="n" id="n" style="width: 150px" autocomplete="off"
-                                                value="$on">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       <span> M </span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="M" id="M" style="width: 150px" autocomplete="off"
-                                                value="$oM">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                       <span> Control Method</span> <br>
-                                        (input 0 or 1)
-                                    </td>
-                                    <td>
-                                        <input type="text" name="method" id="method" style="width: 150px" autocomplete="off"
-                                                value="$omethod">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>Option type</span>
-                                    </td>
-                                    <td>
-                                        <input type="radio" name="type" id="Radio1" value="Put"
-                                               $if otype !='Call':
-                                                    checked=""
-                                               autocomplete="off">
-                                        <span>Put Option</span>
-                                    </td>
-                                    <td colspan="2">
-                                        <input name="type" type="radio" id="Radio2" value="Call"
-                                               $if otype=='Call':
-                                                    checked=""
-                                               autocomplete="off">
-                                        <span>Call Option</span>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                	<td>
-                                        <span>Option Price:</span>
-                                    </td>
-                                	<td>
-                                		<input type="text" disabled readonly id="option price" style="width: 150px" value=$option_price>
-                                    </td>
-
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>Confidence Interval (95%):</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" disabled readonly id="confidence interval" style="width: 300px" value=$interval>
-                                    </td>
-                                </tr>
-
-            </tbody>
-        </table>
-
-
-</div>
-
-						<!-- End Form -->
-
-						<!-- Form Buttons -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- End Form -->
+                        <!-- Form Buttons -->
 						<div class="buttons">
 						  <input type="submit" class="button" value="Calculate" />
 						</div>
 						<!-- End Form Buttons -->
-					</form>
 
-				</div>
+                        <!-- Result -->
+                        <div>
+                            <P>&nbsp;</P>
+                            <h2 style="text-align:center">Result</h2>
+                            <P>&nbsp;</P>
+                            <div align="center">
+                                <textarea style="width:700px;height:80px" name="result">
+                                    $if isinstance(option_price, list):
+                                        Option price is: $option_price
+                                        The 95% confidence interval is $interval
+                                    $else:
+                                        $option_price
+
+                                </textarea>
+                            </div>
+                            <P>&nbsp;</P>
+                        </div>
+                        <!-- End Result-->
+                        <div class="cl">&nbsp;</div>
+                    </form>
+                </div>
+            </div>
 				<!-- End Box -->
-
-			</div>
+        </div>
 			<!-- End Content -->
-
-
-		  <div class="cl">&nbsp;</div>
-		</div>
 		<!-- Main -->
 	</div>
 </div>
 <!-- End Container -->
-
-</div>
 </body>
 
 <!-- Footer -->

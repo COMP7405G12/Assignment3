@@ -65,7 +65,10 @@ class GeometricOptionHtml(object):
                                               strike=strike_price, T=maturity_time, r=risk_free_rate * 100,
                                               times=observation_times)
         except Exception, e:
-            return render.eu_Binomial("Illeage input, calculate error:" + e.message)
+            return render.eu_geometricOptions("Illeage input, calculate error:" + e.message,
+                                              stock=strike_price, vol=volatility, style=test['style'],
+                                              strike=strike_price, T=maturity_time, r=risk_free_rate * 100,
+                                              times=observation_times)
 
 
 class GeometricBasketHtml(object):
@@ -120,7 +123,10 @@ class GeometricBasketHtml(object):
                                              strike=test['strike'], time=test['time'], rate=test['rate'],
                                              corr=test['corr'], num=test['num'])
         except Exception, e:
-            return render.eu_geometricBasket("Illeage input, calculate error:" + e.message)
+            return render.eu_geometricBasket(option_price="Illeage input, calculate error:" + e.message,
+                                             stock=test['stock'], vol=test['vol'], type=test['type'],
+                                             strike=test['strike'], time=test['time'], rate=test['rate'],
+                                             corr=test['corr'], num=test['num'])
 
 
 if __name__ == "__main__":

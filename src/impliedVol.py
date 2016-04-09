@@ -80,8 +80,8 @@ class ImpliedVolHtml(object):
         test = web.input()
         try:
             stock_price = float(test['underlyingStock'])
-            risk_free_rate = float(test['interestRate'])
-            repo_rate = float(test['repoRate'])
+            risk_free_rate = float(test['interestRate'])/100
+            repo_rate = float(test['repoRate'])/100
             maturity_time = float(test['maturityTime'])
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
@@ -89,9 +89,13 @@ class ImpliedVolHtml(object):
             t = 0.0
         except ValueError, e:
             return render.impliedVol("Invalid input, please input again")
-
-        impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
-        print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
-        Vol = impliedV.impliedVol()
-        #print Vol
-        return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
+        try:
+            impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
+            #print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
+            Vol = impliedV.impliedVol()
+            print Vol
+            #print Vol
+            return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate*100, repo=repo_rate*100, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
+        except Exception, e:
+            return render.impliedVol(Vol="Illeage input, calculate error:" + e.message
+                                     , stock=stock_price, interest = risk_free_rate*100, repo=repo_rate*100, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)

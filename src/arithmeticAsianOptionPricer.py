@@ -96,7 +96,7 @@ class ArithmeticAsianOptionPricerHtml(object):
             stock_price = float(test['underlyingStock'])
             strike_price = float(test['strikePrice'])
             sigma = float(test['sigma'])
-            risk_free_rate = float(test['interestRate'])
+            risk_free_rate = float(test['interestRate'])/100
             maturity_time = float(test['maturityTime'])
             n = int(test['n'])
             type = test['type']
@@ -105,13 +105,19 @@ class ArithmeticAsianOptionPricerHtml(object):
         except ValueError, e:
             return render.arithmeticAsianOptionCalculator("Invalid input, please input again")
 
-        confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
-        # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
-        result = confmc.arithmeticOptPricer()
-        print result
-        return render.arithmeticAsianOptionCalculator(option_price=result[0],interval='['+str(result[1][0])+','+str(result[1][1])+']', stock=stock_price, strike=strike_price, sigmaV=sigma,
-                                                  interest=risk_free_rate, maturityT=maturity_time, on=n,
-                                                  otype=type, oM=M, omethod=method)
+        try:
+            confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
+            # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
+            result = confmc.arithmeticOptPricer()
+            print result
+            return render.arithmeticAsianOptionCalculator(option_price=result[0],interval='['+str(result[1][0])+','+str(result[1][1])+']', stock=stock_price, strike=strike_price, sigmaV=sigma,
+                                                  interest=risk_free_rate*100, maturityT=maturity_time, on=n,
+                                                  otype=type, oM=M, omethod=str(method))
+        except Exception, e:
+            return render.arithmeticAsianOptionCalculator(option_price="Illeage input, calculate error:" + e.message, interval=0,
+                                                          stock=stock_price, strike=strike_price, sigmaV=sigma,
+                                                  interest=risk_free_rate*100, maturityT=maturity_time, on=n,
+                                                  otype=type, oM=M, omethod=str(method))
 
 
 if __name__ == '__main__':

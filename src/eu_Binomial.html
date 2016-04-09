@@ -1,92 +1,181 @@
 $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, s=30)
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>American call/put option</title>
+    <link rel="stylesheet" href="static/css/style.css" type="text/css" media="all" />
+	<style type="text/css">
+        a:link {
+        color: #1E046C;
+        }
+    </style>
 </head>
 <body>
-<div>
-    <a href="/">back</a>
-    <h1> American call/put option Calculator (Using Binomial Tree) </h1>
-    <form method="POST" action="eu_bt">
-        <table width="715" border="0">
-            <tbody>
-            <tr>
-                <td width="21%">
-                    <span>Stock Price</span>
-                </td>
-                <td width="28%">
-                    <input type="text" name="underlying" id="underlying" style="width: 150px" autocomplete="off"
-                           value="$stock">
-                </td>
-                <td width="24%">
-                    Volatility
-                </td>
-                <td>
-                    <input type="text" name="vol" id="vol" style="width: 150px" autocomplete="off"
-                           value="$vol">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <span>Strike Price</span>
-                </td>
-                <td>
-                    <input type="text" name="strike" id="strike" style="width: 150px" autocomplete="off"
-                           value="$strike">
-                </td>
-                <td>
-                    <span>Time to Maturity (In years)</span>
-                </td>
-                <td>
-                    <input type="text" name="maturity" id="maturity" style="width: 150px" autocomplete="off"
-                           value="$T">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Risk Free Rate
-                </td>
-                <td>
-                    <input type="text" name="interest_rate" id="rate" style="width: 130px" autocomplete="off"
-                           value="$r">
-                    %
-                </td>
-                 <td>
-                    Number of Steps
-                </td>
-                <td>
-                    <input type="text" name="steps" id="steps" style="width: 130px" autocomplete="off"
-                           value="$s">
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Option type
-                </td>
-                <td>
-                    <input type="radio" name="style" id="Radio1" value="put"
-                           $if style != "call":
-                                checked=""
-                           autocomplete="off">
-                    <span>Put Option</span>
-                </td>
-                <td colspan="2">
-                    <input name="style" type="radio" id="Radio2" value="call"
-                           $if style == "call":
-                                checked=""
-                           autocomplete="off">
-                    <span>Call Option</span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <input name="Calculate" type="submit" value="Calculate">
-    </form>
-    $if isinstance(option_value, float):
-        Option price is: $option_value
-    $elif option_value:
-        <h1>$option_value</h1>
+<!-- Header -->
+<div id="header">
+	<div class="shell">
+		<!-- Logo + Top Nav -->
+		<div id="top">
+        	<h1><a href="/am_bo">Arithmetic Basket Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_bs">European Option(BS)</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_goa">Geometric Asian Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+        	<h1><a href="/eu_gob">Geometric Basket Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_bt">American Option(BT)</a></h1>
+            <h1 style="color:black"> | </h1>
+            <h1> <a href="/aa_price">Arithmetic Asian Option</a></h1>
+            <h1 style="color:black"> | </h1>
+            <h1> <a href="/im_vol">Implied Volatility</a></h1>
+		</div>
+		<!-- End Logo + Top Nav -->
+    </div>
 </div>
+<!-- End Header -->
+
+<!-- Container -->
+<!-- Container -->
+<div id="container" >
+	<div class="shell">
+		<!-- Main -->
+		<div id="main"> <!-- Content -->
+			<div id="content" >
+
+			  <!-- Box -->
+				<div class="box">
+					<!-- Box Head -->
+					<div class="box-head">
+					  <h2>American call/put option Calculator (Using Binomial Tree)</h2>
+					</div>
+					<!-- End Box Head -->
+
+					<form action="eu_bt" method="POST">
+
+						<!-- Form -->
+						<div class="form">
+                        <table width="800" border="0">
+            				<tbody>
+                                <tr>
+                                    <td width="200">
+                                        <span>Stock Price</span>
+                                    </td>
+                                    <td width="200">
+                                        <input type="text" name="underlying" id="underlying"  autocomplete="off"
+                                               value="$stock">
+                                    </td>
+                                    <td>
+                                        Volatility
+                                    </td>
+                                    <td>
+                                        <input type="text" name="vol" id="vol"  autocomplete="off"
+                                               value="$vol">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <span>Strike Price</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="strike" id="strike"  autocomplete="off"
+                                               value="$strike">
+                                    </td>
+                                    <td>
+                                        <span>Time to Maturity (In years)</span>
+                                    </td>
+                                    <td>
+                                        <input type="text" name="maturity" id="maturity"  autocomplete="off"
+                                               value="$T">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Risk Free Rate
+                                    </td>
+                                    <td>
+                                        <input type="text" name="interest_rate" id="rate"  autocomplete="off"
+                                               value="$r">
+                                        %
+                                    </td>
+                                     <td>
+                                        Number of Steps
+                                    </td>
+                                    <td>
+                                        <input type="text" name="steps" id="steps"  autocomplete="off"
+                                               value="$s">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Option Type
+                                    </td>
+                                    <td>
+                                        <input type="radio" name="style" id="Radio1" value="put"
+                                               $if style != "call":
+                                                    checked=""
+                                               autocomplete="off">
+                                        <span>Put Option</span>
+                                    </td>
+                                    <td colspan="2">
+                                        <input name="style" type="radio" id="Radio2" value="call"
+                                               $if style == "call":
+                                                    checked=""
+                                               autocomplete="off">
+                                        <span>Call Option</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+						<!-- End Form -->
+
+						<!-- Form Buttons -->
+						<div class="buttons">
+						  <input type="submit" class="button" value="Calculate" />
+						</div>
+						<!-- End Form Buttons -->
+                        <!-- Result -->
+                        <div>
+                            <P>&nbsp;</P>
+                            <h2 style="text-align:center">Result</h2>
+                            <P>&nbsp;</P>
+                            <div align="center">
+						        <textarea style="width:700px;height:80px" name="result" >
+                                    $if isinstance(option_value, float):
+                                        Option price is: $option_value
+                                    $else:
+                                        $option_value
+                                </textarea>
+                            </div>
+                            <P>&nbsp;</P>
+                        </div>
+                        <!-- End Result-->
+					</form>
+
+				</div>
+				<!-- End Box -->
+
+			</div>
+			<!-- End Content -->
+
+
+		  <div class="cl">&nbsp;</div>
+		</div>
+		<!-- Main -->
+	</div>
+</div>
+<!-- End Container -->
+
 </body>
+<!-- Footer -->
+<div id="footer">
+	<div class="shell">
+		<span class="left">&copy; 2016 COMP7405 - YOUAN WANG, HAO HU, DAINA LI</span>
+		<span class="right">
+
+		</span>
+	</div>
+</div>
+<!-- End Footer -->
 </html>

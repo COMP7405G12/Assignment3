@@ -99,7 +99,9 @@ class BinomialTreeHtml(object):
             return render.eu_Binomial(option_price, stock=strike_price, vol=volatility, style=test['style'],
                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100, s=steps)
         except Exception, e:
-            return render.eu_Binomial("Illeage input, calculate error:" + e.message)
+            return render.eu_Binomial("Illeage input, calculate error:" + e.message,
+                                      stock=strike_price, vol=volatility, style=test['style'],
+                                      strike=strike_price, T=maturity_time, r=risk_free_rate * 100, s=steps)
 
 
 if __name__ == "__main__":

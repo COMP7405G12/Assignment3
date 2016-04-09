@@ -89,12 +89,16 @@ class EuropeanOptionHtml(object):
             return render.eu_black_scholes("Invalid input as {}, please input again".format(e), stock=str(stock_price),
                                            vol=str(volatility), style=test['style'], strike=str(strike_price),
                                            T=str(maturity_time), r=str(risk_free_rate * 100))
-
-        if test['style'] == 'Call':
-            option_price = calculate_call_black_scholes(s=stock_price, e=strike_price, tau=maturity_time,
+        try:
+            if test['style'] == 'Call':
+                option_price = calculate_call_black_scholes(s=stock_price, e=strike_price, tau=maturity_time,
                                                         sigma=volatility, r=risk_free_rate)
-        else:
-            option_price = calculate_put_black_scholes(s=stock_price, e=strike_price, tau=maturity_time,
+            else:
+                option_price = calculate_put_black_scholes(s=stock_price, e=strike_price, tau=maturity_time,
                                                        sigma=volatility, r=risk_free_rate)
-        return render.eu_black_scholes(option_price, stock=str(stock_price), vol=str(volatility), style=test['style'],
+            return render.eu_black_scholes(option_price, stock=str(stock_price), vol=str(volatility), style=test['style'],
+                                       strike=str(strike_price), T=str(maturity_time), r=str(risk_free_rate * 100))
+        except Exception, e:
+            return render.eu_black_scholes("Illeage input, calculate error:" + e.message,
+                                           stock=str(stock_price), vol=str(volatility), style=test['style'],
                                        strike=str(strike_price), T=str(maturity_time), r=str(risk_free_rate * 100))

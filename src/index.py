@@ -41,9 +41,9 @@ urls = (
     '/eu_goa', GeometricOptionHtml,
     '/eu_gob', GeometricBasketHtml,
     '/eu_bt', BinomialTreeHtml,
-    '/im_vol', ImpliedVolHtml,
+    '/im_vol',ImpliedVolHtml,
     '/aa_price', ArithmeticAsianOptionPricerHtml,
-    '/', Index
+    '/', ImpliedVolHtml
 )
 app = web.application(urls, globals())
 

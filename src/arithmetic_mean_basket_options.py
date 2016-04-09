@@ -179,12 +179,12 @@ class ArithmeticMeanBasketOptionsHTML(object):
     def POST(self):
 
         # init some variable values
-        stock_price = '100, 100'
-        volatility = '0.3, 0.3'
-        strike = 100
-        maturity = 3
-        rate = 0.05
-        corr = '0.5'
+        stock_price = '0, 0'
+        volatility = '0, 0'
+        strike = 0
+        maturity = 0
+        rate = 0
+        corr = '0'
         num = None
         option_type = PUT_OPTION
         cv_type = 'GBO'
@@ -209,7 +209,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
                                                          strike=strike, corr=corr, rate=rate * 100,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
                                                          price="Invalid input, please input again")
-        else:
+        try:
             stock_list = stock_price.split(',')
             volatility_list = volatility.split(',')
             corr_list = corr.split(',')
@@ -265,6 +265,11 @@ class ArithmeticMeanBasketOptionsHTML(object):
                                                          strike=strike, corr=corr, rate=rate * 100,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
                                                          price=price_list)
+        except Exception, e:
+            return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         time=maturity, num=num, type=option_type, cv=cv_type,
+                                                         price="Illeage input, calculate error:" + e.message)
 
 
 if __name__ == "__main__":
