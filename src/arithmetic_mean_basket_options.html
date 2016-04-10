@@ -42,9 +42,9 @@ $def with (stock='0, 0', vol='0, 0', strike=0, corr='0', rate=0, time=0, num=0, 
 		<div id="main"> <!-- Content -->
 			<div id="content" >
                 <!-- Box -->
-				<div class="box" align="center">
+				<div class="box">
 					<!-- Box Head -->
-					<div class="box-head">
+					<div class="box-head" align="center">
 					  <h2>Arithmetic mean basket call/put option calculator</h2>
 					</div>
 					<!-- End Box Head -->
@@ -60,7 +60,7 @@ $def with (stock='0, 0', vol='0, 0', strike=0, corr='0', rate=0, time=0, num=0, 
                             Volatility = 0.3, 0.3, 0.3<br>
                             corr = 0.5, 0.2, 0.4<br>
                             </p>
-                            <table width="80%" border="0">
+                            <table width="100%" border="0" align="center">
                                 <tbody>
                                     <tr>
                                         <td width="25%">
@@ -95,7 +95,7 @@ $def with (stock='0, 0', vol='0, 0', strike=0, corr='0', rate=0, time=0, num=0, 
                                             Risk free rate
                                         </td>
                                         <td>
-                                            <input type="text" name="rate" id="rate"  autocomplete="off" value="$rate" size="18">
+                                            <input type="text" name="rate" id="rate"  autocomplete="off"  size="18" value="$rate">
                                             %
                                         </td>
                                         <td>
@@ -165,7 +165,7 @@ $def with (stock='0, 0', vol='0, 0', strike=0, corr='0', rate=0, time=0, num=0, 
                             <h2 style="text-align:center">Result</h2>
                             <P>&nbsp;</P>
                             <div align="center">
-						        <textarea style="width:700px;height:80px" name="result" >
+						        <textarea name="result" >
                                     $if isinstance(price, list):
                                         Option price is: $price[0]
                                         The 95% confidence interval is [$price[1], $price[2]]

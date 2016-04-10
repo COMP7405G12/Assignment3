@@ -55,7 +55,7 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, 
 
 						<!-- Form -->
 						<div class="form">
-                        <table width="80%" border="0">
+                        <table width="100%" border="0">
             				<tbody>
                                 <tr>
                                     <td width="25%">
@@ -95,7 +95,7 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, 
                                     </td>
                                     <td>
                                         <input type="text" name="interest_rate" id="rate"  autocomplete="off"
-                                               value="$r" size="18">
+                                                size="18" value="$r">
                                         %
                                     </td>
                                      <td>
@@ -141,7 +141,7 @@ $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, 
                             <h2 style="text-align:center">Result</h2>
                             <P>&nbsp;</P>
                             <div align="center">
-						        <textarea style="width:700px;height:80px" name="result" >
+						        <textarea name="result" >
                                     $if isinstance(option_value, float):
                                         Option price is: $option_value
                                     $else:

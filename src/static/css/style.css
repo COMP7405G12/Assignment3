@@ -47,8 +47,15 @@ h2 { font-size:15px; font-weight: normal; }
 h3 { font-size:12px; line-height:14px; font-weight: normal; }
 h3 a{ text-decoration: none; }
 
-.box{ align-content:center; position:fixed; left:20%; top: 10%}
-
+.box{ align-content:center;
+      position:fixed;
+      width: 60%;
+      left: 20%;
+      top: 20%;
+      right: auto;
+      bottom: auto;}
+textarea { width: 90%;
+           height: 80px;}
 .shell { width:auto; margin:0 auto; }
 
 #header { height:89px; background:url(images/header.gif); white-space:nowrap; }
