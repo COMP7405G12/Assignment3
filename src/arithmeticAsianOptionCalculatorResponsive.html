@@ -1,0 +1,153 @@
+$def with (option_price='', interval='', stock=0, strike=0, sigmaV=0, interest=0, maturityT=0,  on=0, otype='Call', oM=0, omethod=0)
+
+<html lang="en">
+<head>
+  <title>Arithmetic Asian Option</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;}
+    }
+  </style>
+</head>
+
+<body style="background-color:#f1f1f1">
+    <nav class="navbar navbar-default visible-xs text">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Group 12</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
+                    <li><a href="/eu_bs">European Option</a></li>
+                    <li><a href="/eu_goa">Geometric Option</a></li>
+                    <li><a href="/eu_gob">Geometric Basket</a></li>
+                    <li><a href="/eu_bt">Binominal Tree</a></li>
+                    <li class="active"> <a href="/aa_price">Arithmetic Asian Option</a></li>
+                    <li> <a href="/im_vol">Implied Volatility</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav hidden-xs">
+                <h2>Group 12</h2>
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
+                    <li><a href="/eu_bs">European Option</a></li>
+                    <li><a href="/eu_goa">Geometric Option</a></li>
+                    <li><a href="/eu_gob">Geometric Basket</a></li>
+                    <li><a href="/eu_bt">Binominal Tree</a></li>
+                    <li class="active"> <a href="/aa_price">Arithmetic Asian Option</a></li>
+                    <li> <a href="/im_vol">Implied Volatility</a></li>
+                </ul>
+                <br/>
+            </div>
+            <br/>
+
+            <div class="col-sm-9" style="background-color:#f1f1f1">
+                <div class="well" style="background-color:#f1f1f1; border-style:none">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Implied Volatility Calculate
+                        </div>
+
+                        <div class="panel-body">
+                            <form class="row" role="form" action="aa_price" method="POST">
+                                <div class="col-xs-6 form-group">
+                                    <label for="underlyingStock">Stock Price</label>
+                                    <input class="form-control" type="text" name="underlyingStock" id="underlyingStock" data-bind="value:replyNumber" value="$stock"/>
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label>Strike Price</label>
+                                    <input class="form-control" type="text" name="strikePrice" id="strikePrice" value="$strike">
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label>Volatility</label>
+                                    <input class="form-control" type="text" name="sigma" id="sigma" value="$sigmaV"/>
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label>Maturity time/years</label>
+                                    <input class="form-control" type="text" name="maturityTime" id="maturityTime" value="$maturityT"/>
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label>Risk free rate</label>
+                                    <input class="form-control" type="text" name="interestRate" id="interestRate" value="$interest"/>
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label>n</label>
+                                    <input class="form-control" type="text" name="n" id="n" value="$on"/>
+                                </div>
+                                <div class="col-xs-6 form-group">
+                                    <label>M</label>
+                                    <input class="form-control" type="text" name="M" id="M" value="$oM"/>
+                                </div>
+                                <div class="col-xs-6 form-group">
+                                    <label>method control</label>
+                                    <input class="form-control" type="text" name="method" id="method" value="$omethod"/>
+                                </div>
+                                <div class="col-xs-6 form-group">
+                                    <div class="row">
+                                        <label class="col-xs-12">Option type</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="radio col-xs-12">
+                                            <label><input type="radio" name="type" id="Radio1" value="Put" checked>Put Option</label>
+                                    </div>
+
+                                        <div class="radio col-xs-12">
+                                            <label><input type="radio" name="type" id="Radio2" value="Call">Call Option</label>
+                                    </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label for="optionPrice">Option price:</label>
+                                    <input class="form-control" type="text" readonly id="optionPrice" value=$option_price>
+                                </div>
+                                <div class="col-xs-6 form-group">
+                                    <label for="interval">Interval:</label>
+                                    <input class="form-control" type="text" readonly id="interval" value=$interval>
+                                </div>
+
+                                <div class="col-xs-12 center-block">
+                                    <button type="submit" class="btn btn-lg btn-primary center-block" value="Calculate">Calculate</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

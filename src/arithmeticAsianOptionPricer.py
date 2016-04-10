@@ -88,7 +88,7 @@ class arithmeticOption:
 
 class ArithmeticAsianOptionPricerHtml(object):
     def GET(self):
-        return render.arithmeticAsianOptionCalculator()
+        return render.arithmeticAsianOptionCalculatorResponsive()
 
     def POST(self):
         test = web.input()
@@ -103,13 +103,13 @@ class ArithmeticAsianOptionPricerHtml(object):
             M = int(test['M'])
             method = int(test['method'])
         except ValueError, e:
-            return render.arithmeticAsianOptionCalculator("Invalid input, please input again")
+            return render.arithmeticAsianOptionCalculatorResponsive("Invalid input, please input again")
 
         confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
         # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         result = confmc.arithmeticOptPricer()
         print result
-        return render.arithmeticAsianOptionCalculator(option_price=result[0],interval='['+str(result[1][0])+','+str(result[1][1])+']', stock=stock_price, strike=strike_price, sigmaV=sigma,
+        return render.arithmeticAsianOptionCalculatorResponsive(option_price=result[0],interval='['+str(result[1][0])+','+str(result[1][1])+']', stock=stock_price, strike=strike_price, sigmaV=sigma,
                                                   interest=risk_free_rate, maturityT=maturity_time, on=n,
                                                   otype=type, oM=M, omethod=method)
 
