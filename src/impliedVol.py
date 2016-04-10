@@ -78,25 +78,32 @@ class ImpliedVolHtml(object):
 
     def POST(self):
         test = web.input()
+        stock_price = 100
+        risk_free_rate = 0.04
+        repo_rate = 0.3
+        maturity_time = 3
+        strike_price = 100
+        premium = 10
+        type = 'Call'
+        t = 0
         try:
             stock_price = float(test['underlyingStock'])
-            risk_free_rate = float(test['interestRate'])/100
-            repo_rate = float(test['repoRate'])/100
+            risk_free_rate = float(test['interestRate']) / 100
+            repo_rate = float(test['repoRate']) / 100
             maturity_time = float(test['maturityTime'])
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
             type = test['type']
-            t = 0.0
         except ValueError, e:
-            return render.impliedVol("Invalid input, please input again")
+            return render.impliedVol("Invalid input {}, please input again".format(e), stock=stock_price,
+                                     interest=risk_free_rate * 100, repo=repo_rate * 100,
+                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
         try:
             impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
             Vol = impliedV.impliedVol()
-            return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate*100, repo=repo_rate*100,
-                                     maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type,
-                                     ot=t)
+            return render.impliedVol(Vol, stock=stock_price, interest=risk_free_rate * 100, repo=repo_rate * 100,
+                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
         except Exception, e:
-            return render.impliedVol(Vol="Illeage input, calculate error:" + e.message
-                                     , stock=stock_price, interest = risk_free_rate*100, repo=repo_rate*100,
-                                     maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type,
-                                     ot=t)
+            return render.impliedVol(Vol="Illegal input, calculate error: {}".format(e)
+                                     , stock=stock_price, interest=risk_free_rate * 100, repo=repo_rate * 100,
+                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
