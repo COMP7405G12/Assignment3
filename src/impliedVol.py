@@ -73,7 +73,7 @@ class impliedVol:
 
 class ImpliedVolHtml(object):
     def GET(self):
-        return render.impliedVol()
+        return render.impliedVolResponsive()
 
     def POST(self):
         test = web.input()
@@ -93,4 +93,4 @@ class ImpliedVolHtml(object):
         print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         Vol = impliedV.impliedVol()
         #print Vol
-        return render.impliedVol(Vol, stock=stock_price, interest = risk_free_rate, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
+        return render.impliedVolResponsive(Vol, stock=stock_price, interest = risk_free_rate, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
