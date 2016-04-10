@@ -56,7 +56,7 @@ h3 a{ text-decoration: none; }
       bottom: auto;}
 textarea { width: 90%;
            height: 80px;}
-.shell { width:auto; margin:0 auto; }
+.shell { width: auto; margin: auto; }
 
 #header { height:89px; background:url(images/header.gif); white-space:nowrap; }
 #header h1{
@@ -65,7 +65,7 @@ textarea { width: 90%;
 	padding-top: 12px;
 }
 
-#top { height:53px; position:fixed; left: 8%}
+#top { height:53px; position:fixed; left: 8%; right: 8%}
 
 
 #container { padding:20px 0;}
