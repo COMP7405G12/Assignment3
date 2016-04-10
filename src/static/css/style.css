@@ -47,7 +47,7 @@ h2 { font-size:15px; font-weight: normal; }
 h3 { font-size:12px; line-height:14px; font-weight: normal; }
 h3 a{ text-decoration: none; }
 
-.box{ align-content:center; position:fixed; left:25%; top: 30%}
+.box{ align-content:center; position:fixed; left:20%; top: 10%}
 
 .shell { width:auto; margin:0 auto; }
 
