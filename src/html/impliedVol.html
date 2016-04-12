@@ -1,4 +1,4 @@
-$def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremium=0, otype='Call', ot=0)
+$def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremium=0, otype='Call')
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -16,18 +16,18 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
 	<div class="shell">
 		<!-- Logo + Top Nav -->
 		<div id="top">
-        	<h1><a href="/am_bo">Arithmetic Mean Basket Options</a></h1>
-        	<h1> | </h1>
-            <h1><a href="/eu_bs">European Option</a></h1>
-        	<h1> | </h1>
-            <h1><a href="/eu_goa">Geometric Option</a></h1>
-        	<h1> | </h1>
-        	<h1><a href="/eu_gob">Geometric Basket</a></h1>
-        	<h1> | </h1>
-            <h1><a href="/eu_bt">Binominal Tree</a></h1>
-            <h1> | </h1>
+        	<h1><a href="/am_bo">Arithmetic Basket Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_bs">European Option(BS)</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_goa">Geometric Asian Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+        	<h1><a href="/eu_gob">Geometric Basket Option</a></h1>
+        	<h1 style="color:black"> | </h1>
+            <h1><a href="/eu_bt">American Option(BT)</a></h1>
+            <h1 style="color:black"> | </h1>
             <h1> <a href="/aa_price">Arithmetic Asian Option</a></h1>
-            <h1> | </h1>
+            <h1 style="color:black"> | </h1>
             <h1> <a href="/im_vol">Implied Volatility</a></h1>
 		</div>
 		<!-- End Logo + Top Nav -->
@@ -41,46 +41,43 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
 		<!-- Main -->
 		<div id="main"> <!-- Content -->
 			<div id="content" >
-		
-			  <!-- Box -->
-				<div class="box">
+                <!-- Box -->
+				<div class="box" align="center">
 					<!-- Box Head -->
 					<div class="box-head">
-					  <h2>Implied Volatility Calculate</h2>
+					  <h2>Implied Volatility Calculator</h2>
 					</div>
 					<!-- End Box Head -->
-					
-					<form action="im_vol" method="POST">
-						
-						<!-- Form -->
+                    <form action="im_vol" method="POST">
+                        <!-- Form -->
 						<div class="form">
-                        <table width="715" border="0">
+                        <table width="100%" border="0">
             				<tbody>
             					<tr>
-                					<td width="21%"><span>Stock Price</span></td>
-                					<td>
-                    					<input type="text" name="underlyingStock" id="underlyingStock" style="width: 150px" autocomplete="off" value="$stock">
+                					<td width="25%"><span>Stock Price</span></td>
+                					<td width="25%">
+                    					<input type="text" name="underlyingStock" id="underlyingStock"  autocomplete="off" value="$stock">
                 					</td>
 
-                					<td width="24%"><span>Strike Price</span></td>
+                					<td><span>Strike Price</span></td>
                 					<td>
-                    					<input type="text" name="strikePrice" id="strikePrice" style="width: 150px" autocomplete="off" value="$strike">
+                    					<input type="text" name="strikePrice" id="strikePrice"  autocomplete="off" value="$strike">
                 					</td>
             					</tr>
             					<tr>
                                     <td>
-                                        <span>Repo Rate</span>
+                                        <span>Repo Rate </span>
                                     </td>
                                     <td>
-                                        <input type="text" name="repoRate" id="repoRate" style="width: 150px" autocomplete="off"
-                                               value="$repo">
+                                        <input type="text" name="repoRate" id="repoRate"  autocomplete="off"
+                                               value="$repo" size="18">
+                                        %
                                     </td>
-                               
                                     <td>
                                         <span>Maturity time/years</span>
                                     </td>
                                     <td>
-                                        <input type="text" name="maturityTime" id="maturityTime" style="width: 150px" autocomplete="off"
+                                        <input type="text" name="maturityTime" id="maturityTime"  autocomplete="off"
                                                value="$maturityT">
                                     </td>
             					</tr>
@@ -89,15 +86,16 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
                                         <span>Risk free rate</span>
                                     </td>
                                     <td>
-                                        <input type="text" name="interestRate" id="interestRate" style="width: 150px" autocomplete="off"
-                                               value="$interest">
+                                        <input type="text" name="interestRate" id="interestRate"  autocomplete="off"
+                                               value="$interest" size="18">
+                                        %
                                     </td>
             					
                                     <td>
-                                        <span>Premium</span>
+                                        <span>Option Price</span>
                                     </td>
                                     <td>
-                                        <input type="text" name="premium" id="premium" style="width: 150px" autocomplete="off"
+                                        <input type="text" name="premium" id="premium"  autocomplete="off"
                                                 value="$opremium">
                                     </td>
                                 </tr>
@@ -121,22 +119,9 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
                                         <span>Call Option</span>
                                     </td>
                                 </tr>
-
-                                <tr>
-                                	<td>
-                                        Implied Volatility:
-                                    </td>
-                                	<td>
-                                		<input type="text" disabled readonly id="volatility" style="width: 150px" value=$Vol >
-                                    </td>
-                                </tr>
-                                
-            </tbody>
-        </table>
-                       
-                            
-													
-</div>
+                            </tbody>
+                        </table>
+                        </div>
 						<!-- End Form -->
 						
 						<!-- Form Buttons -->
@@ -144,16 +129,30 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
 						  <input type="submit" class="button" value="Calculate" />
 						</div>
 						<!-- End Form Buttons -->
+                        <!-- Result -->
+                        <div>
+                            <P>&nbsp;</P>
+                            <h2 style="text-align:center">Result</h2>
+                            <P>&nbsp;</P>
+                            <div align="center">
+						        <textarea name="result" >
+                                    $if isinstance(Vol, float):
+                                        Implied Volatility is: $Vol
+                                    $elif Vol is None:
+                                        No result for Implied Volatility
+                                    $else:
+                                        $Vol
+                                </textarea>
+                            </div>
+                            <P>&nbsp;</P>
+                        </div>
+                        <!-- End Result-->
 					</form>
-                    
-				</div>
+                </div>
 				<!-- End Box -->
-				
-			</div>
+            </div>
 			<!-- End Content -->
-
-			
-		  <div class="cl">&nbsp;</div>			
+            <div class="cl">&nbsp;</div>
 		</div>
 		<!-- Main -->
 	</div>

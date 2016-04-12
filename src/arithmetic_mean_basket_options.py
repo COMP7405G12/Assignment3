@@ -8,34 +8,22 @@
 
 import math
 
+import web
 import numpy as np
 import numpy.random as random
-import web
 from scipy.stats import norm
 
 from __init__ import render
-
-# Test value or other constant
-PATH_NUMBER = 100000
-RISK_FREE_RATE = 0.05
-MATURITY_TIME = 3
 
 # Remark that used in the following code
 PUT_OPTION = "Put"
 CALL_OPTION = "Call"
 
 
-def generate_two_correlated_random_variables(means, stds, corr, number):
-    covs = [[stds[0] ** 2, stds[0] * stds[1] * corr],
-            [stds[0] * stds[1] * corr, stds[1] ** 2]]
-    m = random.multivariate_normal(means, covs, number).T
-    return m
-
-
 class Option(object):
-    '''
+    """
     Class to represent a option
-    '''
+    """
 
     def __init__(self, s0, strike_price, sigma, option_type, tau, risk_free_rate):
         self.sigma = float(sigma)
@@ -46,6 +34,11 @@ class Option(object):
         self.risk_free_rate = risk_free_rate
 
     def get_stock_price_array(self, random_value):
+        """
+        Use input random_value to calculate the stock price list
+        :param random_value: a list of random value
+        :return: a stock price list
+        """
         stock_price_list = []
         for zi in random_value:
             stock_price = self.s0 * math.exp((self.risk_free_rate - 0.5 * self.sigma ** 2) * self.tau +
@@ -56,7 +49,7 @@ class Option(object):
 
 
 class BasketOptions(object):
-    def __init__(self, stock_price, k, sigma, option_type, tau, rho, risk_free_rate=RISK_FREE_RATE):
+    def __init__(self, stock_price, k, sigma, option_type, tau, rho, risk_free_rate):
         self.option = []
         self.option_num = len(stock_price)
         for i in range(self.option_num):
@@ -66,6 +59,8 @@ class BasketOptions(object):
         self.type = option_type
         self.risk_free_rate = risk_free_rate
         self.rho = []
+
+        # generate correlation matrix
         for i in range(self.option_num):
             self.rho.append([])
             for j in range(self.option_num):
@@ -77,14 +72,12 @@ class BasketOptions(object):
                     self.rho[i].append(self.rho[j][i])
 
     def _get_basket_price(self, path_number):
-        ''' Return the basket price, this will be different as the option type difference '''
+        """ Return the basket price, this will be different as the option type difference """
 
         # fix all the variable
         random.seed(0)
 
-        # z1, z2 = generate_two_correlated_random_variables([0, 0], [1, 1], self.rho[0][1], path_number)
-        # s1 = self.option[0].get_stock_price_array(z1)
-        # s2 = self.option[1].get_stock_price_array(z2)
+        # generate the random values and calculate all the stock price
         z = random.multivariate_normal([0] * self.option_num, self.rho, path_number).T
         b = self.option[0].get_stock_price_array(z[0])
         s = [self.option[0].get_stock_price_array(z[0])]
@@ -92,7 +85,7 @@ class BasketOptions(object):
             s.append(self.option[i].get_stock_price_array(z[i]))
             b += s[-1]
 
-        b = b / self.option_num
+        b /= self.option_num
         if self.type == CALL_OPTION:
             maturity_price = b - self.strike_price
         else:
@@ -105,6 +98,12 @@ class BasketOptions(object):
         return maturity_price, s
 
     def _get_geometric_price(self):
+        """
+        An internal version, use to get the geometric basket option price
+        :return: the geometric option price
+        """
+
+        # get average, standard deviation and basket price at time zero of current basket option
         std_bg = 0.0
         for i in range(self.option_num):
             for j in range(self.option_num):
@@ -115,11 +114,14 @@ class BasketOptions(object):
         for i in range(self.option_num):
             mean_bg -= 0.5 * self.option[i].sigma ** 2 / self.option_num
             bg0 *= self.option[i].s0
+        bg0 **= (1 / float(self.option_num))
 
-        bg0 = bg0 ** (1 / float(self.option_num))
+        # calculate d1 and d2
         d1 = (math.log(bg0 / self.strike_price) + (mean_bg + 0.5 * std_bg ** 2) * self.tau) / (
             std_bg * math.sqrt(self.tau))
         d2 = d1 - std_bg * math.sqrt(self.tau)
+
+        # Base on the option type, get the option price
         if self.type == PUT_OPTION:
             n1 = norm.cdf(-d1)
             n2 = norm.cdf(-d2)
@@ -131,9 +133,6 @@ class BasketOptions(object):
             price = math.exp(-self.risk_free_rate * self.tau) * (
                 -self.strike_price * n2 + bg0 * math.exp(mean_bg * self.tau) * n1)
         return price
-
-    def get_geometric_price(self):
-        return self._get_geometric_price()
 
     def get_basket_price_with_control_variate(self, path_number):
         arithmetic_price, s = self._get_basket_price(path_number)
@@ -163,7 +162,7 @@ class BasketOptions(object):
         return [control_mean, control_mean - 1.96 * control_std / math.sqrt(path_number),
                 control_mean + 1.96 * control_std / math.sqrt(path_number)]
 
-    def get_basket_price(self, path_number=PATH_NUMBER, has_control=False):
+    def get_basket_price(self, path_number, has_control=False):
         if has_control:
             return self.get_basket_price_with_control_variate(path_number)
         else:
@@ -178,16 +177,19 @@ class ArithmeticMeanBasketOptionsHTML(object):
         return render.arithmetic_mean_basket_options()
 
     def POST(self):
-        data = web.input()
-        stock_price = '100, 100'
-        volatility = '0.3, 0.3'
-        strike = 100
-        maturity = 3
-        rate = 0.05
-        corr = '0.5'
+
+        # init some variable values
+        stock_price = '0, 0'
+        volatility = '0, 0'
+        strike = 0
+        maturity = 0
+        rate = 0
+        corr = '0'
         num = None
         option_type = PUT_OPTION
         cv_type = 'GBO'
+
+        data = web.input()
         try:
             stock_price = data['stock']
             volatility = data['vol']
@@ -207,27 +209,33 @@ class ArithmeticMeanBasketOptionsHTML(object):
                                                          strike=strike, corr=corr, rate=rate * 100,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
                                                          price="Invalid input, please input again")
-        else:
+        try:
             stock_list = stock_price.split(',')
             volatility_list = volatility.split(',')
             corr_list = corr.split(',')
             n = len(stock_list)
+
+            # As a basket option, there should be at least two stocks
             if n <= 1:
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                              strike=strike, corr=corr, rate=rate * 100,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
                                                              price="Not enough stock price input")
 
+            # number of volatility and number of stocks are not equal
             elif n > len(volatility_list):
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                              strike=strike, corr=corr, rate=rate * 100,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
                                                              price="Stock price number is greater than volatility number")
+
+            # Number of correlation does not meet the required
             elif len(corr_list) < n * (n - 1) / 2:
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                              strike=strike, corr=corr, rate=rate * 100,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
                                                              price="Not enough correlation numbers")
+
             else:
                 try:
                     stock_list = [float(i.strip()) for i in stock_list]
@@ -237,18 +245,48 @@ class ArithmeticMeanBasketOptionsHTML(object):
                     return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                                  strike=strike, corr=corr, rate=rate * 100,
                                                                  time=maturity, num=num, type=option_type, cv=cv_type,
-                                                                 price="Wrong value input")
+                                                                 price="Wrong value input {}".format(e))
 
             calculator = BasketOptions(stock_price=stock_list, k=strike, sigma=volatility_list, rho=corr_list,
                                        option_type=option_type, tau=maturity, risk_free_rate=rate)
             if num:
+
+                # GBO means using control variate
                 if cv_type == 'GBO':
                     price_list = list(calculator.get_basket_price(num, True))
+
+                # without control variate
                 else:
                     price_list = list(calculator.get_basket_price(num))
             else:
-                price_list = None
+                price_list = "Please input a valid path number"
+
             return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                          strike=strike, corr=corr, rate=rate * 100,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
-                                                         price=price_list, geo_price=calculator.get_geometric_price())
+                                                         price=price_list)
+        except Exception, e:
+            return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
+                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         time=maturity, num=num, type=option_type, cv=cv_type,
+                                                         price="Illeage input, calculate error:" + e.message)
+
+
+if __name__ == "__main__":
+    sigma = [0.5, 0.5]
+    stock_price = [100,100]
+    k = 100
+    rho = [0.5]
+    test = BasketOptions(stock_price=stock_price[:], k=k, sigma=sigma[:], option_type=PUT_OPTION, tau=3, rho=rho[:],
+                         risk_free_rate=0.05)
+    a = test.get_basket_price(100000, False)
+    b = test.get_basket_price(100000, True)
+
+    print "{p[0]:.2f}, [{p[1]:.2f}, {p[2]:.2f}]\n{q[0]:.2f}, [{q[1]:.2f}, {q[2]:.2f}]".format(p=a, q=b)
+
+    test = BasketOptions(stock_price=stock_price, k=k, sigma=sigma, option_type=CALL_OPTION, tau=3, rho=rho,
+                         risk_free_rate=0.05)
+    a = test.get_basket_price(100000, False)
+    b = test.get_basket_price(100000, True)
+    print "{p[0]:.2f}, [{p[1]:.2f}, {p[2]:.2f}]\n{q[0]:.2f}, [{q[1]:.2f}, {q[2]:.2f}]".format(p=a, q=b)
+

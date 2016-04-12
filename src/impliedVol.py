@@ -1,6 +1,9 @@
 import math
-from scipy.stats import norm
+
 import web
+import numpy as np
+from scipy.stats import norm
+
 from __init__ import render
 
 
@@ -46,7 +49,6 @@ class impliedVol:
                     sigma -= increment
                     n += 1
                     sigmadiff = abs(increment)
-        print sigma
         return sigma
 
     def blackschole(self, sigma=float()):
@@ -70,13 +72,20 @@ class impliedVol:
         return call, cvega, put, pvega
 
 
-
 class ImpliedVolHtml(object):
     def GET(self):
         return render.impliedVolResponsive()
 
     def POST(self):
         test = web.input()
+        stock_price = 100
+        risk_free_rate = 0.04
+        repo_rate = 0.3
+        maturity_time = 3
+        strike_price = 100
+        premium = 10
+        type = 'Call'
+        t = 0
         try:
             stock_price = float(test['underlyingStock'])
             risk_free_rate = float(test['interestRate'])
@@ -85,12 +94,16 @@ class ImpliedVolHtml(object):
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
             type = test['type']
-            t = 0.0
         except ValueError, e:
-            return render.impliedVol("Invalid input, please input again")
-
-        impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
-        print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
-        Vol = impliedV.impliedVol()
-        #print Vol
-        return render.impliedVolResponsive(Vol, stock=stock_price, interest = risk_free_rate, repo=repo_rate, maturityT = maturity_time, strike = strike_price, opremium = premium, otype=type, ot=t)
+            return render.impliedVolResponsive("Invalid input {}, please input again".format(e), stock=stock_price,
+                                     interest=risk_free_rate * 100, repo=repo_rate * 100,
+                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
+        try:
+            impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
+            Vol = impliedV.impliedVol()
+            return render.impliedVolResponsive(Vol, stock=stock_price, interest=risk_free_rate * 100, repo=repo_rate * 100,
+                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
+        except Exception, e:
+            return render.impliedVolResponsive(Vol="Illegal input, calculate error: {}".format(e)
+                                     , stock=stock_price, interest=risk_free_rate * 100, repo=repo_rate * 100,
+                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)

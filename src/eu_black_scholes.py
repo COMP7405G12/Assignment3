@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# File name:
+# File name: eu_black_scholes.py
 # description: Black-Scholes Formulas for European call/put options
 # Author: warn
 # Date: 2/3/2016 19:12
@@ -25,7 +25,7 @@ def calculate_d2(s, e, tau, sigma, r):
 
 
 def calculate_call_black_scholes(s, e, tau, sigma, r):
-    '''
+    """
     main function to calculate Black-Scholes call option price
     :param s: Stock price at time t
     :param e: Strike price
@@ -33,7 +33,7 @@ def calculate_call_black_scholes(s, e, tau, sigma, r):
     :param sigma: volatility
     :param r: risk free rate
     :return: the call price of Black-Scholes
-    '''
+    """
     d1 = calculate_d1(s, e, tau, sigma, r)
     d2 = calculate_d2(s, e, tau, sigma, r)
     n1 = norm.cdf(d1)
@@ -43,7 +43,7 @@ def calculate_call_black_scholes(s, e, tau, sigma, r):
 
 
 def calculate_put_black_scholes(s, e, tau, sigma, r):
-    '''
+    """
     main function to calculate black scholes put option price
     :param s: Stock price at time t
     :param e: Strike price
@@ -51,7 +51,7 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     :param sigma: volatility
     :param r: risk free rate
     :return: the put price of black_scholes
-    '''
+    """
     d1 = calculate_d1(s, e, tau, sigma, r)
     d2 = calculate_d2(s, e, tau, sigma, r)
     n1 = norm.cdf(-d1)
@@ -59,26 +59,46 @@ def calculate_put_black_scholes(s, e, tau, sigma, r):
     p = e * math.exp(-r * tau) * n2 - s * n1
     return p
 
+
 class EuropeanOptionHtml(object):
+    """
+    Web page to show European put / call option calculator
+    """
+
     def GET(self):
         return render.eu_black_scholes()
 
     def POST(self):
         test = web.input()
+        stock_price = 0
+        volatility = 0
+        strike_price = 0
+        maturity_time = 0
+        risk_free_rate = 0
         try:
+
+            # Read parameters from input
             stock_price = float(test['underlying'])
             volatility = float(test['vol'])
             strike_price = float(test['strike'])
             maturity_time = float(test['maturity'])
             risk_free_rate = float(test['interest_rate']) / 100
         except ValueError, e:
-            return render.eu_black_scholes("Invalid input, please input again")
 
-        if test['style'] == 'Call':
-            option_price = calculate_call_black_scholes(stock_price, strike_price, maturity_time,
-                                                        volatility, risk_free_rate)
-        else:
-            option_price = calculate_put_black_scholes(stock_price, strike_price, maturity_time,
-                                                       volatility, risk_free_rate)
-        return render.eu_black_scholes(option_price, stock=stock_price, vol=volatility, style=test['style'],
-                                       strike=strike_price, T=maturity_time, r=risk_free_rate * 100)
+            # Handle exception
+            return render.eu_black_scholes("Invalid input as {}, please input again".format(e), stock=str(stock_price),
+                                           vol=str(volatility), style=test['style'], strike=str(strike_price),
+                                           T=str(maturity_time), r=str(risk_free_rate * 100))
+        try:
+            if test['style'] == 'Call':
+                option_price = calculate_call_black_scholes(s=stock_price, e=strike_price, tau=maturity_time,
+                                                        sigma=volatility, r=risk_free_rate)
+            else:
+                option_price = calculate_put_black_scholes(s=stock_price, e=strike_price, tau=maturity_time,
+                                                       sigma=volatility, r=risk_free_rate)
+            return render.eu_black_scholes(option_price, stock=str(stock_price), vol=str(volatility), style=test['style'],
+                                       strike=str(strike_price), T=str(maturity_time), r=str(risk_free_rate * 100))
+        except Exception, e:
+            return render.eu_black_scholes("Illeage input, calculate error:" + e.message,
+                                           stock=str(stock_price), vol=str(volatility), style=test['style'],
+                                       strike=str(strike_price), T=str(maturity_time), r=str(risk_free_rate * 100))

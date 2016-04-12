@@ -8,35 +8,19 @@
 
 import web
 
-from __init__ import render
 from eu_black_scholes import EuropeanOptionHtml
 from arithmetic_mean_basket_options import ArithmeticMeanBasketOptionsHTML
-from geometricOptions import GeometricOptionHtml
+from geometricOptions import GeometricOptionHtml, GeometricBasketHtml
 from Binomial import BinomialTreeHtml
-
-from geometricOptions import  GeometricBasketHtml
-from src.arithmeticAsianOptionPricer import ArithmeticAsianOptionPricerHtml
-from src.impliedVol import ImpliedVolHtml
+from impliedVol import ImpliedVolHtml
+from arithmeticAsianOptionPricer import ArithmeticAsianOptionPricerHtml
 
 
-class Index(object):
-    def GET(self):
-        return '''<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Index page of option calculator</title>
-</head>
-<body>
-<h1>Option Calculator</h1>
-<a href="/eu_bs">European call/put option Calculator (Using Black-Scholes)</a><br>
-<a href="/am_bo">Arithmetic/Geometric mean basket call/put options calculator</a><br>
-<a href="/eu_goa">Geometric Asian call/put options calculator</a><br>
-<a href="/eu_gob">Geometric Basket call/put options calculator</a><br>
-<a href="/eu_bt">American call/put option Calculator (Using Binomial Tree)</a><br>
-<a href="/im_vol">Implied Volatility</a><br>
-<a href="/aa_price">Arithmetic Asian Option Calculator (Monte Carlo)</a><br>
-</body>
-</html>'''
+class MyApplication(web.application):
+    def run(self, port=8080, *middleware):
+        func = self.wsgifunc(*middleware)
+        return web.httpserver.runsimple(func, ('127.0.0.1', port))
+
 
 urls = (
     '/am_bo', ArithmeticMeanBasketOptionsHTML,
@@ -46,10 +30,9 @@ urls = (
     '/eu_bt', BinomialTreeHtml,
     '/im_vol', ImpliedVolHtml,
     '/aa_price', ArithmeticAsianOptionPricerHtml,
-    '/', Index
+    '/', ImpliedVolHtml
 )
-app = web.application(urls, globals())
-
+app = MyApplication(urls, globals())
 
 if __name__ == "__main__":
     app.run()
