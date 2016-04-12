@@ -1,181 +1,151 @@
 $def with (option_value=None, stock=0, strike=0, vol=0, style='Call', T=0, r=0, s=30)
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>American call/put option</title>
-    <link rel="stylesheet" href="static/css/style.css" type="text/css" media="all" />
-	<style type="text/css">
-        a:link {
-        color: #1E046C;
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <style>
+        /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+        .row.content {height: 538px}
+
+        /* Set gray background color and 100% height */
+        .sidenav {
+            background-color: #f1f1f1;
+            height: 100%;
+        }
+
+        /* On small screens, set height to 'auto' for the grid */
+        @media screen and (max-width: 767px) {
+            .row.content {height: auto;}
         }
     </style>
 </head>
 <body>
-<!-- Header -->
-<div id="header">
-	<div class="shell">
-		<!-- Logo + Top Nav -->
-		<div id="top">
-        	<h1><a href="/am_bo">Arithmetic Basket Option</a></h1>
-        	<h1 style="color:black"> | </h1>
-            <h1><a href="/eu_bs">European Option(BS)</a></h1>
-        	<h1 style="color:black"> | </h1>
-            <h1><a href="/eu_goa">Geometric Asian Option</a></h1>
-        	<h1 style="color:black"> | </h1>
-        	<h1><a href="/eu_gob">Geometric Basket Option</a></h1>
-        	<h1 style="color:black"> | </h1>
-            <h1><a href="/eu_bt">American Option(BT)</a></h1>
-            <h1 style="color:black"> | </h1>
-            <h1> <a href="/aa_price">Arithmetic Asian Option</a></h1>
-            <h1 style="color:black"> | </h1>
-            <h1> <a href="/im_vol">Implied Volatility</a></h1>
-		</div>
-		<!-- End Logo + Top Nav -->
-    </div>
-</div>
-<!-- End Header -->
+    <nav class="navbar navbar-default visible-xs text">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Group 12</a>
+            </div>
+            <div class="collapse navbar-collapse" id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
+                    <li><a href="/eu_bs">European Option</a></li>
+                    <li><a href="/eu_goa">Geometric Option</a></li>
+                    <li><a href="/eu_gob">Geometric Basket</a></li>
+                    <li class="active"><a href="/eu_bt">Binominal Tree</a></li>
+                    <li> <a href="/aa_price">Arithmetic Asian Option</a></li>
+                    <li> <a href="/im_vol">Implied Volatility</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-<!-- Container -->
-<!-- Container -->
-<div id="container" >
-	<div class="shell">
-		<!-- Main -->
-		<div id="main"> <!-- Content -->
-			<div id="content" >
-
-			  <!-- Box -->
-				<div class="box" align="center">
-					<!-- Box Head -->
-					<div class="box-head">
-					  <h2>American call/put option Calculator (Using Binomial Tree)</h2>
-					</div>
-					<!-- End Box Head -->
-
-					<form action="eu_bt" method="POST">
-
-						<!-- Form -->
-						<div class="form">
-                        <table width="100%" border="0">
-            				<tbody>
-                                <tr>
-                                    <td width="25%">
-                                        <span>Stock Price</span>
-                                    </td>
-                                    <td width="25%">
-                                        <input type="text" name="underlying" id="underlying"  autocomplete="off"
-                                               value="$stock">
-                                    </td>
-                                    <td>
-                                        Volatility
-                                    </td>
-                                    <td>
-                                        <input type="text" name="vol" id="vol"  autocomplete="off"
-                                               value="$vol">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span>Strike Price</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="strike" id="strike"  autocomplete="off"
-                                               value="$strike">
-                                    </td>
-                                    <td>
-                                        <span>Time to Maturity (In years)</span>
-                                    </td>
-                                    <td>
-                                        <input type="text" name="maturity" id="maturity"  autocomplete="off"
-                                               value="$T">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Risk Free Rate
-                                    </td>
-                                    <td>
-                                        <input type="text" name="interest_rate" id="rate"  autocomplete="off"
-                                                size="18" value="$r">
-                                        %
-                                    </td>
-                                     <td>
-                                        Number of Steps
-                                    </td>
-                                    <td>
-                                        <input type="text" name="steps" id="steps"  autocomplete="off"
-                                               value="$s">
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Option Type
-                                    </td>
-                                    <td>
-                                        <input type="radio" name="style" id="Radio1" value="put"
-                                               $if style != "call":
-                                                    checked=""
-                                               autocomplete="off">
-                                        <span>Put Option</span>
-                                    </td>
-                                    <td colspan="2">
-                                        <input name="style" type="radio" id="Radio2" value="call"
-                                               $if style == "call":
-                                                    checked=""
-                                               autocomplete="off">
-                                        <span>Call Option</span>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-						<!-- End Form -->
-
-						<!-- Form Buttons -->
-						<div class="buttons">
-						  <input type="submit" class="button" value="Calculate" />
-						</div>
-						<!-- End Form Buttons -->
-                        <!-- Result -->
-                        <div>
-                            <P>&nbsp;</P>
-                            <h2 style="text-align:center">Result</h2>
-                            <P>&nbsp;</P>
-                            <div align="center">
-						        <textarea name="result" >
-                                    $if isinstance(option_value, float):
-                                        Option price is: $option_value
-                                    $else:
-                                        $option_value
-                                </textarea>
-                            </div>
-                            <P>&nbsp;</P>
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav hidden-xs">
+                <h2>Group 12</h2>
+                <ul class="nav nav-pills nav-stacked">
+                    <li><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
+                    <li><a href="/eu_bs">European Option</a></li>
+                    <li><a href="/eu_goa">Geometric Option</a></li>
+                    <li><a href="/eu_gob">Geometric Basket</a></li>
+                    <li class="active"><a href="/eu_bt">Binominal Tree</a></li>
+                    <li> <a href="/aa_price">Arithmetic Asian Option</a></li>
+                    <li> <a href="/im_vol">Implied Volatility</a></li>
+                </ul>
+                <br/>
+            </div>
+            <div class="col-sm-9" style="background-color:#f1f1f1">
+                <div class="well" style="background-color:#f1f1f1; border-style:none">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            American call/put option Calculator (Using Binomial Tree)
                         </div>
-                        <!-- End Result-->
-					</form>
+                        <div class="panel-body">
+                            <form class="row" role="form" action="eu_bt" method="POST">
+                                <div class="col-xs-6 form-group">
+                                    <label for="underlying">Stock Price</label>
+                                    <input class="form-control" type="text" name="underlying" id="underlying"
+                                           data-bind="value:replyNumber" value="$stock"/>
+                                </div>
 
-				</div>
-				<!-- End Box -->
+                                <div class="col-xs-6 form-group">
+                                    <label>Volatility</label>
+                                    <input class="form-control" type="text" name="vol" id="vol" value="$vol"/>
+                                </div>
 
-			</div>
-			<!-- End Content -->
+                                <div class="col-xs-6 form-group">
+                                    <label>Strike Price</label>
+                                    <input class="form-control" type="text" name="strike" id="strike" value="$strike"/>
+                                </div>
 
+                                <div class="col-xs-6 form-group">
+                                    <label>Maturity time/years</label>
+                                    <input class="form-control" type="text" name="maturity" id="maturity" value="$T"/>
+                                </div>
 
-		  <div class="cl">&nbsp;</div>
-		</div>
-		<!-- Main -->
-	</div>
-</div>
-<!-- End Container -->
+                                <div class="col-xs-6 form-group">
+                                    <label>Risk free rate</label>
+                                    <input class="form-control" type="text" name="interest_rate" id="rate" value="$r"/>
+                                </div>
 
+                                <div class="col-xs-6 form-group">
+                                    <label>Number of Steps</label>
+                                    <input class="form-control" type="text" name="steps" id="steps" value="$s"/>
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <div class="row">
+                                        <label class="col-xs-12">Option type</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="radio col-xs-12">
+                                            <label>
+                                                $if style == "call":
+                                                    <input type="radio" name="style" id="Radio1" value="put"/>
+                                                $else:
+                                                    <input type="radio" name="style" id="Radio1" value="put" checked/>
+                                                Put option
+                                            </label>
+                                        </div>
+
+                                        <div class="radio col-xs-12">
+                                            <label>
+                                                $if style != "call":
+                                                    <input type="radio" name="style" id="Radio2" value="call"/>
+                                                $else:
+                                                    <input type="radio" name="style" id="Radio2" value="call" checked/>
+                                                Call option
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-xs-6 form-group">
+                                    <label for="option_price">Option Price:</label>
+                                    <input class="form-control" type="text" readonly id="option_price"
+                                           value="$option_value"/>
+                                </div>
+                                <div class="col-xs-12 center-block">
+                                    <button type="submit" class="btn btn-lg btn-primary center-block" value="Calculate">
+                                        Calculate
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+		    </div>
+	    </div>
+    </div>
 </body>
-<!-- Footer -->
-<div id="footer">
-	<div class="shell">
-		<span class="left">&copy; 2016 COMP7405 - YOUAN WANG, HAO HU, DAINA LI</span>
-		<span class="right">
-
-		</span>
-	</div>
-</div>
-<!-- End Footer -->
 </html>
