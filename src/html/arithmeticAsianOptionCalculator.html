@@ -167,7 +167,7 @@ $def with (option_price='', interval='', stock=0, strike=0, sigmaV=0, interest=0
                             <P>&nbsp;</P>
                             <div align="center">
                                 <textarea name="result">
-                                    $if isinstance(option_price, list):
+                                    $if isinstance(option_price, float):
                                         Option price is: $option_price
                                         The 95% confidence interval is $interval
                                     $else:
