@@ -53,7 +53,7 @@ class GeometricOptionHtml(object):
             volatility = float(test['vol'])
             strike_price = float(test['strike'])
             maturity_time = float(test['maturity'])
-            risk_free_rate = float(test['interest_rate']) / 100
+            risk_free_rate = float(test['interest_rate'])
             observation_times = float(test['observation_times'])
         except ValueError, e:
             return render.eu_geometricOptions("Invalid input, please input again")
@@ -62,12 +62,12 @@ class GeometricOptionHtml(object):
                                           observation_times,
                                           test['style'])
             return render.eu_geometricOptions(option_price, stock=strike_price, vol=volatility, style=test['style'],
-                                              strike=strike_price, T=maturity_time, r=risk_free_rate * 100,
+                                              strike=strike_price, T=maturity_time, r=risk_free_rate,
                                               times=observation_times)
         except Exception, e:
             return render.eu_geometricOptions("Illeage input, calculate error:" + e.message,
                                               stock=strike_price, vol=volatility, style=test['style'],
-                                              strike=strike_price, T=maturity_time, r=risk_free_rate * 100,
+                                              strike=strike_price, T=maturity_time, r=risk_free_rate,
                                               times=observation_times)
 
 
@@ -82,7 +82,7 @@ class GeometricBasketHtml(object):
             volatility = str(test['vol']).split(",")
             strike_price = float(test['strike'])
             maturity_time = float(test['time'])
-            risk_free_rate = float(test['rate']) / 100
+            risk_free_rate = float(test['rate'])
             asset_num = int(test['num'])
             correlation = str(test['corr']).split(",")
             type = test['type']
