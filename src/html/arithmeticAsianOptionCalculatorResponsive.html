@@ -110,28 +110,63 @@ $def with (option_price='', interval='', stock=0, strike=0, sigmaV=0, interest=0
                                     <input class="form-control" type="text" name="M" id="M" value="$oM"/>
                                 </div>
                                 <div class="col-xs-6 form-group">
-                                    <label>method control</label>
-                                    <input class="form-control" type="text" name="method" id="method" value="$omethod"/>
-                                </div>
-                                <div class="col-xs-6 form-group">
                                     <div class="row">
                                         <label class="col-xs-12">Option type</label>
                                     </div>
                                     <div class="row">
                                         <div class="radio col-xs-12">
-                                            <label><input type="radio" name="type" id="Radio1" value="Put" checked>Put Option</label>
+                                            <label>
+                                                $if otype == "Call":
+                                                    <input type="radio" name="type" id="Radio1" value="Put">
+                                                $else:
+                                                    <input type="radio" name="type" id="Radio1" value="Put" checked>
+                                                Put Option</label>
                                     </div>
 
                                         <div class="radio col-xs-12">
-                                            <label><input type="radio" name="type" id="Radio2" value="Call">Call Option</label>
+                                            <label>
+                                                $if otype == "Call":
+                                                    <input type="radio" name="type" id="Radio2" value="Call" checked>
+                                                $else:
+                                                    <input type="radio" name="type" id="Radio2" value="Call">
+                                                Call Option
+                                            </label>
                                     </div>
                                     </div>
 
                                 </div>
 
                                 <div class="col-xs-6 form-group">
+                                    <div class="row">
+                                        <label class="col-xs-12">Control Variate Method</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="radio col-xs-12">
+                                            <label>
+                                                $if not int(omethod):
+                                                    <input type="radio" name="method" id="method1" value="0" checked>
+                                                $else:
+                                                    <input type="radio" name="method" id="method1" value="0">
+                                                No Control Variate
+                                            </label>
+                                        </div>
+
+                                        <div class="radio col-xs-12">
+                                            <label>
+                                                $if int(omethod):
+                                                    <input type="radio" name="method" id="method2" value="1" checked>
+                                                $else:
+                                                    <input type="radio" name="method" id="method2" value="1">
+                                                Using Control Variate
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-xs-6 form-group">
                                     <label for="optionPrice">Option price:</label>
-                                    <input class="form-control" type="text" readonly id="optionPrice" value=$option_price>
+                                    <input class="form-control" type="text" readonly id="optionPrice"
+                                           value=$option_price>
                                 </div>
                                 <div class="col-xs-6 form-group">
                                     <label for="interval">Interval:</label>
@@ -139,7 +174,8 @@ $def with (option_price='', interval='', stock=0, strike=0, sigmaV=0, interest=0
                                 </div>
 
                                 <div class="col-xs-12 center-block">
-                                    <button type="submit" class="btn btn-lg btn-primary center-block" value="Calculate">Calculate</button>
+                                    <button type="submit" class="btn btn-lg btn-primary center-block"
+                                            value="Calculate">Calculate</button>
                                 </div>
                             </form>
                         </div>

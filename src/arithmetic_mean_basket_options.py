@@ -195,7 +195,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
             volatility = data['vol']
             strike = float(data['strike'])
             maturity = float(data['time'])
-            rate = float(data['rate']) / 100
+            rate = float(data['rate'])
             corr = data['corr']
             num = data['num']
             if num and num.isdigit:
@@ -206,7 +206,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
             cv_type = data['cv_type']
         except ValueError, e:
             return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         strike=strike, corr=corr, rate=rate,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
                                                          price="Invalid input, please input again")
         try:
@@ -218,21 +218,21 @@ class ArithmeticMeanBasketOptionsHTML(object):
             # As a basket option, there should be at least two stocks
             if n <= 1:
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                             strike=strike, corr=corr, rate=rate * 100,
+                                                             strike=strike, corr=corr, rate=rate,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
                                                              price="Not enough stock price input")
 
             # number of volatility and number of stocks are not equal
             elif n > len(volatility_list):
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                             strike=strike, corr=corr, rate=rate * 100,
+                                                             strike=strike, corr=corr, rate=rate,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
                                                              price="Stock price number is greater than volatility number")
 
             # Number of correlation does not meet the required
             elif len(corr_list) < n * (n - 1) / 2:
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                             strike=strike, corr=corr, rate=rate * 100,
+                                                             strike=strike, corr=corr, rate=rate,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
                                                              price="Not enough correlation numbers")
 
@@ -243,7 +243,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
                     corr_list = [float(i.strip()) for i in corr_list]
                 except ValueError, e:
                     return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                                 strike=strike, corr=corr, rate=rate * 100,
+                                                                 strike=strike, corr=corr, rate=rate,
                                                                  time=maturity, num=num, type=option_type, cv=cv_type,
                                                                  price="Wrong value input {}".format(e))
 
@@ -262,31 +262,11 @@ class ArithmeticMeanBasketOptionsHTML(object):
                 price_list = "Please input a valid path number"
 
             return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         strike=strike, corr=corr, rate=rate,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
-                                                         price=price_list)
+                                                         price=price_list[0], interval=str(price_list[1:]))
         except Exception, e:
             return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
-                                                         strike=strike, corr=corr, rate=rate * 100,
+                                                         strike=strike, corr=corr, rate=rate,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
                                                          price="Illeage input, calculate error:" + e.message)
-
-
-if __name__ == "__main__":
-    sigma = [0.5, 0.5]
-    stock_price = [100,100]
-    k = 100
-    rho = [0.5]
-    test = BasketOptions(stock_price=stock_price[:], k=k, sigma=sigma[:], option_type=PUT_OPTION, tau=3, rho=rho[:],
-                         risk_free_rate=0.05)
-    a = test.get_basket_price(100000, False)
-    b = test.get_basket_price(100000, True)
-
-    print "{p[0]:.2f}, [{p[1]:.2f}, {p[2]:.2f}]\n{q[0]:.2f}, [{q[1]:.2f}, {q[2]:.2f}]".format(p=a, q=b)
-
-    test = BasketOptions(stock_price=stock_price, k=k, sigma=sigma, option_type=CALL_OPTION, tau=3, rho=rho,
-                         risk_free_rate=0.05)
-    a = test.get_basket_price(100000, False)
-    b = test.get_basket_price(100000, True)
-    print "{p[0]:.2f}, [{p[1]:.2f}, {p[2]:.2f}]\n{q[0]:.2f}, [{q[1]:.2f}, {q[2]:.2f}]".format(p=a, q=b)
-

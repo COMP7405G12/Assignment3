@@ -1,8 +1,4 @@
-$def with (stock='0, 0', vol='0, 0', strike=0, corr='0', rate=0, time=0, num=0, type='Call', cv=None, price=None)
-$if price is None:
-    $price = [0, 0, 0]
-$elif isinstance(price, str):
-    $price = [price, 0, 0]
+$def with (stock='0, 0', vol='0, 0', strike=0, corr='0', rate=0, time=0, num=0, type='Call', cv=None, price='', interval='')
 
 <html lang="en">
 <head>
@@ -14,7 +10,7 @@ $elif isinstance(price, str):
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <style>
         /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-        .row.content {height: 550px}
+        .row.content {height: 806px}
 
         /* Set gray background color and 100% height */
         .sidenav {
@@ -41,13 +37,13 @@ $elif isinstance(price, str):
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
                 <ul class="nav navbar-nav">
-                    <li><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
+                    <li class="active"><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
                     <li><a href="/eu_bs">European Option</a></li>
                     <li><a href="/eu_goa">Geometric Option</a></li>
                     <li><a href="/eu_gob">Geometric Basket</a></li>
                     <li><a href="/eu_bt">Binominal Tree</a></li>
                     <li> <a href="/aa_price">Arithmetic Asian Option</a></li>
-                    <li class="active"> <a href="/im_vol">Implied Volatility</a></li>
+                    <li> <a href="/im_vol">Implied Volatility</a></li>
                 </ul>
             </div>
         </div>
@@ -58,17 +54,16 @@ $elif isinstance(price, str):
             <div class="col-sm-3 sidenav hidden-xs">
                 <h2>Group 12</h2>
                 <ul class="nav nav-pills nav-stacked">
-                    <li><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
+                    <li class="active"><a href="/am_bo">Arithmetic Mean Basket Options</a></li>
                     <li><a href="/eu_bs">European Option</a></li>
                     <li><a href="/eu_goa">Geometric Option</a></li>
                     <li><a href="/eu_gob">Geometric Basket</a></li>
                     <li><a href="/eu_bt">Binominal Tree</a></li>
                     <li> <a href="/aa_price">Arithmetic Asian Option</a></li>
-                    <li class="active"> <a href="/im_vol">Implied Volatility</a></li>
+                    <li> <a href="/im_vol">Implied Volatility</a></li>
                 </ul>
                 <br/>
             </div>
-            <br/>
             <div class="col-sm-9" style="background-color:#f1f1f1">
                 <div class="well" style="background-color:#f1f1f1; border-style:none">
                     <div class="panel panel-primary">
@@ -85,8 +80,6 @@ $elif isinstance(price, str):
                             Stock price = 100, 100, 100<br />
                             Volatility = 0.3, 0.3, 0.3<br />
                             corr = 0.5, 0.2, 0.4<br />
-                        </div>
-                        <div class="panel-body">
                             <form class="row" role="form" action="am_bo" method="POST">
                                 <div class="col-xs-6 form-group">
                                     <label for="stock">Stock Price</label>
@@ -135,7 +128,7 @@ $elif isinstance(price, str):
                                                     <input type="radio" name="type" id="Option1" value="Put"/>
                                                 $else:
                                                     <input type="radio" name="type" id="Option1" value="Put" checked/>
-                                                        Put option
+                                                Put option
                                             </label>
                                         </div>
 
@@ -145,7 +138,7 @@ $elif isinstance(price, str):
                                                     <input type="radio" name="type" id="Option2" value="Call"/>
                                                 $else:
                                                     <input type="radio" name="type" id="Option2" value="Call" checked/>
-                                                        Call option
+                                                Call option
                                             </label>
                                         </div>
                                     </div>
@@ -160,20 +153,20 @@ $elif isinstance(price, str):
                                         <div class="radio col-xs-12">
                                             <label>
                                                 $if cv == "GBO":
-                                                    <input type="radio" name="type" id="NoCV" value="NoCV"/>
+                                                    <input type="radio" name="cv_type" id="NoCV" value="NoCV"/>
                                                 $else:
-                                                    <input type="radio" name="type" id="NoCV" value="NoCV" checked/>
-                                                        No Control Variate
+                                                    <input type="radio" name="cv_type" id="NoCV" value="NoCV" checked/>
+                                                No Control Variate
                                             </label>
                                         </div>
 
                                         <div class="radio col-xs-12">
                                             <label>
                                                 $if cv == "GBO":
-                                                    <input type="radio" name="type" id="GBO" value="GBO" checked/>
+                                                    <input type="radio" name="cv_type" id="GBO" value="GBO" checked/>
                                                 $else:
-                                                    <input type="radio" name="type" id="GBO" value="GBO"/>
-                                                        Geometric Basket Option
+                                                    <input type="radio" name="cv_type" id="GBO" value="GBO"/>
+                                                Geometric Basket Option
                                             </label>
                                         </div>
                                     </div>
@@ -181,12 +174,12 @@ $elif isinstance(price, str):
 
                                 <div class="col-xs-6 form-group">
                                     <label for="option_price">Option Price:</label>
-                                    <input class="form-control" type="text" readonly id="option_price" value="$price[0]"/>
+                                    <input class="form-control" type="text" readonly id="option_price" value="$price"/>
                                 </div>
 
                                 <div class="col-xs-6 form-group">
                                     <label for="interval">Confidence Interval:</label>
-                                    <input class="form-control" type="text" readonly id="interval" value="$price[1:]"/>
+                                    <input class="form-control" type="text" readonly id="interval" value="$interval"/>
                                 </div>
 
                                 <div class="col-xs-12 center-block">
