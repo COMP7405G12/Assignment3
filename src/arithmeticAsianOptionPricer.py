@@ -106,59 +106,8 @@ class ArithmeticAsianOptionPricerHtml(object):
             return render.arithmeticAsianOptionCalculatorResponsive("Invalid input, please input again")
 
         confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
-        # print (stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium,type, t)
         result = confmc.arithmeticOptPricer()
         print result
         return render.arithmeticAsianOptionCalculatorResponsive(option_price=result[0],interval='['+str(result[1][0])+','+str(result[1][1])+']', stock=stock_price, strike=strike_price, sigmaV=sigma,
                                                   interest=risk_free_rate, maturityT=maturity_time, on=n,
                                                   otype=type, oM=M, omethod=method)
-
-
-if __name__ == '__main__':
-    # testcase 01
-    aopricer = arithmeticOption(100.0, 100.0, 0.3, 0.05, 3, 50, "Put", 100000, 0)
-    confmc0 = aopricer.arithmeticOptPricer()
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 50, "Put", 100000, 1)
-    confmc1 = aopricer.arithmeticOptPricer()
-    print confmc0
-    print confmc1
-
-    # testcase 02
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 100, "Put", 100000, 0)
-    confmc2 = aopricer.arithmeticOptPricer()
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 100, "Put", 100000, 1)
-    confmc3 = aopricer.arithmeticOptPricer()
-    print confmc2
-    print confmc3
-
-    # testcase 03
-    aopricer.__init__(100.0, 100.0, 0.4, 0.05, 3, 50, "Put", 100000, 0)
-    confmc4 = aopricer.arithmeticOptPricer()
-    aopricer.__init__(100.0, 100.0, 0.4, 0.05, 3, 50, "Put", 100000, 1)
-    confmc5 = aopricer.arithmeticOptPricer()
-    print confmc4
-    print confmc5
-
-    # testcase 04
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 50, "Call", 100000, 0)
-    confmc6 = aopricer.arithmeticOptPricer()
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 50, "Call", 100000, 1)
-    confmc7 = aopricer.arithmeticOptPricer()
-    print confmc6
-    print confmc7
-
-    # testcase 05
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 100, "Call", 100000, 0)
-    confmc8 = aopricer.arithmeticOptPricer()
-    aopricer.__init__(100.0, 100.0, 0.3, 0.05, 3, 100, "Call", 100000, 1)
-    confmc9 = aopricer.arithmeticOptPricer()
-    print confmc8
-    print confmc9
-
-    # testcase 06
-    aopricer.__init__(100.0, 100.0, 0.4, 0.05, 3, 50, "Call", 100000, 0)
-    confmc10 = aopricer.arithmeticOptPricer()
-    aopricer.__init__(100.0, 100.0, 0.4, 0.05, 3, 50, "Call", 100000, 1)
-    confmc11 = aopricer.arithmeticOptPricer()
-    print confmc10
-    print confmc11
