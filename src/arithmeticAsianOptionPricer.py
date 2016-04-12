@@ -92,6 +92,14 @@ class ArithmeticAsianOptionPricerHtml(object):
 
     def POST(self):
         test = web.input()
+        stock_price = 100
+        sigma = 0.3
+        risk_free_rate = 0.05
+        maturity_time = 3
+        n = 10
+        type = 'Call'
+        M = 1000
+        method = 1
         try:
             stock_price = float(test['underlyingStock'])
             strike_price = float(test['strikePrice'])
@@ -102,14 +110,18 @@ class ArithmeticAsianOptionPricerHtml(object):
             type = test['type']
             M = int(test['M'])
             method = int(test['method'])
+            confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M,
+                                      method)
+            result = confmc.arithmeticOptPricer()
+            return render.arithmeticAsianOptionCalculatorResponsive(option_price=result[0],
+                                                                    interval='[' + str(result[1][0]) + ',' + str(
+                                                                        result[1][1]) + ']', stock=stock_price,
+                                                                    strike=strike_price, sigmaV=sigma,
+                                                                    interest=risk_free_rate, maturityT=maturity_time,
+                                                                    on=n, otype=type, oM=M, omethod=method)
         except ValueError, e:
-            return render.arithmeticAsianOptionCalculatorResponsive("Invalid input, please input again")
-
-        confmc = arithmeticOption(stock_price, strike_price, sigma, risk_free_rate, maturity_time, n, type, M, method)
-        result = confmc.arithmeticOptPricer()
-        return render.arithmeticAsianOptionCalculatorResponsive(option_price=result[0],
-                                                                interval='[' + str(result[1][0]) + ',' + str(
-                                                                    result[1][1]) + ']', stock=stock_price,
-                                                                strike=strike_price, sigmaV=sigma,
-                                                                interest=risk_free_rate, maturityT=maturity_time, on=n,
-                                                                otype=type, oM=M, omethod=method)
+            return render.arithmeticAsianOptionCalculatorResponsive("Invalid input, please input again",
+                                                                    stock=stock_price, strike=strike_price,
+                                                                    sigmaV=sigma, interest=risk_free_rate,
+                                                                    maturityT=maturity_time, on=n, otype=type, oM=M,
+                                                                    omethod=method)
