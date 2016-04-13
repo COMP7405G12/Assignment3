@@ -120,7 +120,7 @@ class ArithmeticAsianOptionPricerHtml(object):
                                                                     strike=strike_price, sigmaV=sigma,
                                                                     interest=risk_free_rate, maturityT=maturity_time,
                                                                     on=n, otype=type, oM=M, omethod=method)
-        except ValueError, e:
+        except Exception:
             return render.arithmeticAsianOptionCalculatorResponsive("Invalid input, please input again",
                                                                     stock=stock_price, strike=strike_price,
                                                                     sigmaV=sigma, interest=risk_free_rate,
