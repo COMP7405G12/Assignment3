@@ -1,5 +1,4 @@
 $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremium=0, otype='Call')
-
 <html lang="en">
 <head>
   <title>Implied Volatility</title>
@@ -112,11 +111,23 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
                                     </div>
                                     <div class="row">
                                         <div class="radio col-xs-12">
-                                            <label><input type="radio" name="type" id="Radio1" value="Put" checked>Put Option</label>
+                                            <label>
+                                                $if otype == "Put":
+                                                    <input type="radio" name="type" id="Radio1" value="Put" checked>
+                                                $else:
+                                                    <input type="radio" name="type" id="Radio1" value="Put">
+                                                Put Option
+                                            </label>
                                     </div>
 
                                         <div class="radio col-xs-12">
-                                            <label><input type="radio" name="type" id="Radio2" value="Call">Call Option</label>
+                                            <label>
+                                                $if otype != "Put":
+                                                    <input type="radio" name="type" id="Radio2" value="Call" checked>
+                                                $else:
+                                                    <input type="radio" name="type" id="Radio2" value="Call">
+                                                Call Option
+                                            </label>
                                     </div>
                                     </div>
 
@@ -128,7 +139,9 @@ $def with (Vol=None, stock=0, interest=0, repo=0, maturityT=0, strike=0, opremiu
                                 </div>
 
                                 <div class="col-xs-12 center-block">
-                                    <button type="submit" class="btn btn-lg btn-primary center-block" value="Calculate">Calculate</button>
+                                    <button type="submit" class="btn btn-lg btn-primary center-block" value="Calculate">
+                                        Calculate
+                                    </button>
                                 </div>
                             </form>
                         </div>

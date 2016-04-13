@@ -33,8 +33,8 @@ class impliedVol:
         while (sigmadiff >= tol) & (n < nmax):
             C, Cvega, P, Pvega = self.blackschole(sigma)
             if self.type == 'Call':
-                if Cvega == 0:
-                    return None
+                if not Cvega:
+                    return "NaN"
                 else:
                     increment = float(C - self.premium) / Cvega
                     sigma -= increment
@@ -42,8 +42,8 @@ class impliedVol:
                     sigmadiff = abs(increment)
 
             if self.type == 'Put':
-                if Pvega == 0:
-                    return None
+                if not Pvega:
+                    return "NaN"
                 else:
                     increment = float(P - self.premium) / Pvega
                     sigma -= increment
@@ -74,7 +74,7 @@ class impliedVol:
 
 class ImpliedVolHtml(object):
     def GET(self):
-        return render.impliedVolResponsive()
+        return render.impliedVolResponsive("")
 
     def POST(self):
         test = web.input()
@@ -96,14 +96,17 @@ class ImpliedVolHtml(object):
             type = test['type']
         except ValueError, e:
             return render.impliedVolResponsive("Invalid input {}, please input again".format(e), stock=stock_price,
-                                     interest=risk_free_rate * 100, repo=repo_rate * 100,
-                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
+                                               interest=risk_free_rate, repo=repo_rate,
+                                               maturityT=maturity_time, strike=strike_price, opremium=premium,
+                                               otype=type)
         try:
             impliedV = impliedVol(stock_price, risk_free_rate, repo_rate, maturity_time, strike_price, premium, type, t)
             Vol = impliedV.impliedVol()
-            return render.impliedVolResponsive(Vol, stock=stock_price, interest=risk_free_rate * 100, repo=repo_rate * 100,
-                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
+            return render.impliedVolResponsive(Vol, stock=stock_price, interest=risk_free_rate, repo=repo_rate,
+                                               maturityT=maturity_time, strike=strike_price, opremium=premium,
+                                               otype=type)
         except Exception, e:
             return render.impliedVolResponsive(Vol="Illegal input, calculate error: {}".format(e)
-                                     , stock=stock_price, interest=risk_free_rate * 100, repo=repo_rate * 100,
-                                     maturityT=maturity_time, strike=strike_price, opremium=premium, otype=type)
+                                               , stock=stock_price, interest=risk_free_rate, repo=repo_rate,
+                                               maturityT=maturity_time, strike=strike_price, opremium=premium,
+                                               otype=type)

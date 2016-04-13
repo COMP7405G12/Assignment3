@@ -61,12 +61,12 @@ class GeometricOptionHtml(object):
             option_price = geometricAsian(stock_price, volatility, risk_free_rate, maturity_time, strike_price,
                                           observation_times,
                                           test['style'])
-            return render.eu_geometricOptions(option_price, stock=strike_price, vol=volatility, style=test['style'],
+            return render.eu_geometricOptions(option_price, stock=stock_price, vol=volatility, style=test['style'],
                                               strike=strike_price, T=maturity_time, r=risk_free_rate,
                                               times=observation_times)
         except Exception, e:
             return render.eu_geometricOptions("Illeage input, calculate error:" + e.message,
-                                              stock=strike_price, vol=volatility, style=test['style'],
+                                              stock=stock_price, vol=volatility, style=test['style'],
                                               strike=strike_price, T=maturity_time, r=risk_free_rate,
                                               times=observation_times)
 
