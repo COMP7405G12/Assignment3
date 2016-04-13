@@ -93,6 +93,7 @@ class ArithmeticAsianOptionPricerHtml(object):
     def POST(self):
         test = web.input()
         stock_price = 100
+        strike_price = 100
         sigma = 0.3
         risk_free_rate = 0.05
         maturity_time = 3

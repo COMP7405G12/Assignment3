@@ -1,7 +1,6 @@
 import math
 
 import web
-import numpy as np
 from scipy.stats import norm
 
 from __init__ import render
