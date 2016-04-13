@@ -259,7 +259,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
                 else:
                     price_list = list(calculator.get_basket_price(num))
             else:
-                price_list = "Please input a valid path number"
+                price_list = ["Please input a valid path number", ""]
 
             return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                          strike=strike, corr=corr, rate=rate,
