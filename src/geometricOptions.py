@@ -65,7 +65,7 @@ class GeometricOptionHtml(object):
                                               strike=strike_price, T=maturity_time, r=risk_free_rate,
                                               times=observation_times)
         except Exception, e:
-            return render.eu_geometricOptions("Illeage input, calculate error: {}".format(e),
+            return render.eu_geometricOptions("Illeage input, calculate error",
                                               stock=stock_price, vol=volatility, style=test['style'],
                                               strike=strike_price, T=maturity_time, r=risk_free_rate,
                                               times=observation_times)

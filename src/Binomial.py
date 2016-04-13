@@ -91,14 +91,14 @@ class BinomialTreeHtml(object):
             risk_free_rate = float(test['interest_rate'])
             steps = int(test['steps'])
         except ValueError, e:
-            return render.eu_Binomial("Invalid input as {}, please input again".format(e))
+            return render.eu_Binomial("Invalid input")
         try:
             bt = Binomial(stock_price, volatility, strike_price, risk_free_rate, maturity_time, test['style'], n=steps)
             option_price = bt.execute()
             return render.eu_Binomial(option_price, stock=strike_price, vol=volatility, style=test['style'],
                                       strike=strike_price, T=maturity_time, r=risk_free_rate, s=steps)
-        except Exception, e:
-            return render.eu_Binomial("Illeage input, calculate error: {}".format(e),
+        except Exception:
+            return render.eu_Binomial("Illeage input, calculate error",
                                       stock=strike_price, vol=volatility, style=test['style'],
                                       strike=strike_price, T=maturity_time, r=risk_free_rate, s=steps)
 

@@ -93,8 +93,8 @@ class ImpliedVolHtml(object):
             strike_price = float(test['strikePrice'])
             premium = float(test['premium'])
             type = test['type']
-        except ValueError, e:
-            return render.impliedVolResponsive("Invalid input {}, please input again".format(e), stock=stock_price,
+        except ValueError:
+            return render.impliedVolResponsive(Vol="Invalid input", stock=stock_price,
                                                interest=risk_free_rate, repo=repo_rate,
                                                maturityT=maturity_time, strike=strike_price, opremium=premium,
                                                otype=type)
@@ -104,8 +104,7 @@ class ImpliedVolHtml(object):
             return render.impliedVolResponsive(Vol, stock=stock_price, interest=risk_free_rate, repo=repo_rate,
                                                maturityT=maturity_time, strike=strike_price, opremium=premium,
                                                otype=type)
-        except Exception, e:
-            return render.impliedVolResponsive(Vol="Illegal input, calculate error: {}".format(e)
-                                               , stock=stock_price, interest=risk_free_rate, repo=repo_rate,
-                                               maturityT=maturity_time, strike=strike_price, opremium=premium,
-                                               otype=type)
+        except Exception:
+            return render.impliedVolResponsive(Vol="Illegal input", stock=stock_price, interest=risk_free_rate,
+                                               repo=repo_rate, maturityT=maturity_time, strike=strike_price,
+                                               opremium=premium, otype=type)

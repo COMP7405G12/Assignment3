@@ -227,7 +227,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
                 return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                              strike=strike, corr=corr, rate=rate,
                                                              time=maturity, num=num, type=option_type, cv=cv_type,
-                                                             price="Stock price number is greater than volatility number")
+                                                             price="Stock price number exceeds")
 
             # Number of correlation does not meet the required
             elif len(corr_list) < n * (n - 1) / 2:
@@ -245,7 +245,7 @@ class ArithmeticMeanBasketOptionsHTML(object):
                     return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                                  strike=strike, corr=corr, rate=rate,
                                                                  time=maturity, num=num, type=option_type, cv=cv_type,
-                                                                 price="Wrong value input {}".format(e))
+                                                                 price="Wrong value input")
 
             calculator = BasketOptions(stock_price=stock_list, k=strike, sigma=volatility_list, rho=corr_list,
                                        option_type=option_type, tau=maturity, risk_free_rate=rate)
@@ -269,4 +269,4 @@ class ArithmeticMeanBasketOptionsHTML(object):
             return render.arithmetic_mean_basket_options(stock=stock_price, vol=volatility,
                                                          strike=strike, corr=corr, rate=rate,
                                                          time=maturity, num=num, type=option_type, cv=cv_type,
-                                                         price="Illeage input, calculate error:" + e.message)
+                                                         price="Illeage input, calculate error")
